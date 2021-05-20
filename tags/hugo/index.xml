@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Hugo on The future is Bright</title><link>https://example.com/tags/hugo/</link><description>Recent content in Hugo on The future is Bright</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2008–2018, Steve Francia and the Hugo Authors; all rights reserved.</copyright><lastBuildDate>Wed, 19 May 2021 17:28:43 +0800</lastBuildDate><atom:link href="https://example.com/tags/hugo/index.xml" rel="self" type="application/rss+xml"/><item><title>Complete Website Setup Guide by GitHub and Hugo</title><link>https://example.com/post/getting-started/</link><pubDate>Wed, 19 May 2021 17:28:43 +0800</pubDate><guid>https://example.com/post/getting-started/</guid><description>
+&lt;p>I've been blogging in many different places like &lt;a href="http://bright-zheng.blogspot.com/">blogspot&lt;/a>, &lt;a href="https://brightzheng100.medium.com/">Medium&lt;/a> and even Linkedin. I'm tired with bad editors and feel quite comfortable with simply markdown.&lt;/p>
+&lt;p>While I realize that &lt;a href="https://gohugo.io/">&lt;code>Hugo&lt;/code>&lt;/a> can do a good job building website and the potential to host it purly on GitHub, that makes a lot of sense to me as I can drat and share posts, tutorials, tips like maintaining code in my repo.&lt;/p>
+&lt;p>So let's get started.&lt;/p>
+&lt;p>And, since the website is powered by &lt;a href="https://gohugo.io/">&lt;code>Hugo&lt;/code>&lt;/a> and is hosted on GitHub, let me start with a blog sharing what I did setting it up in details.&lt;/p>
+&lt;blockquote>
+&lt;p>Note: I did all these on my MacBook Pro. So your mileage may vary.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="step-1-install-hugo">Step 1: Install Hugo&lt;/h2>
+&lt;p>Prerequisites:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>Git&lt;/code> is installed&lt;/li>
+&lt;li>&lt;code>brew&lt;/code> is installed&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span># Install hugo
+&lt;span class="ln">2&lt;/span>$ brew install hugo
+&lt;span class="ln">3&lt;/span>
+&lt;span class="ln">4&lt;/span># Check
+&lt;span class="ln">5&lt;/span>$ hugo version
+&lt;span class="ln">6&lt;/span>hugo v0.83.1+extended darwin/amd64 BuildDate=unknown
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-2-create-a-new-site">Step 2: Create a New Site&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>$ hugo new site brightzheng100
+&lt;span class="ln"> 2&lt;/span>Congratulations! Your new Hugo site is created in /Users/brightzheng/development/blog/brightzheng100.
+&lt;span class="ln"> 3&lt;/span>
+&lt;span class="ln"> 4&lt;/span>Just a few more steps and you are ready to go:
+&lt;span class="ln"> 5&lt;/span>
+&lt;span class="ln"> 6&lt;/span>1. Download a theme into the same-named folder.
+&lt;span class="ln"> 7&lt;/span> Choose a theme from https://themes.gohugo.io/ or
+&lt;span class="ln"> 8&lt;/span> create your own with the &lt;span class="s2">&amp;#34;hugo new theme &amp;lt;THEMENAME&amp;gt;&amp;#34;&lt;/span> command.
+&lt;span class="ln"> 9&lt;/span>2. Perhaps you want to add some content. You can add single files
+&lt;span class="ln">10&lt;/span> with &lt;span class="s2">&amp;#34;hugo new &amp;lt;SECTIONNAME&amp;gt;/&amp;lt;FILENAME&amp;gt;.&amp;lt;FORMAT&amp;gt;&amp;#34;&lt;/span>.
+&lt;span class="ln">11&lt;/span>3. Start the built-in live server via &lt;span class="s2">&amp;#34;hugo server&amp;#34;&lt;/span>.
+&lt;span class="ln">12&lt;/span>
+&lt;span class="ln">13&lt;/span>Visit https://gohugo.io/ &lt;span class="k">for&lt;/span> quickstart guide and full documentation.
+&lt;span class="ln">14&lt;/span>
+&lt;span class="ln">15&lt;/span>$ &lt;span class="nb">cd&lt;/span> brightzheng100
+&lt;span class="ln">16&lt;/span>$ git init
+&lt;span class="ln">17&lt;/span>Initialized empty Git repository in /Users/brightzheng/development/blog/brightzheng100/.git/
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-3-add-a-theme">Step 3: Add a Theme&lt;/h2>
+&lt;p>Pick your prefered theme from here: &lt;a href="https://themes.gohugo.io/">https://themes.gohugo.io/&lt;/a>.
+This is the one I picked: &lt;a href="https://themes.gohugo.io/hugo-clarity/">https://themes.gohugo.io/hugo-clarity/&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Clone it as a sub module&lt;/span>
+&lt;span class="ln"> 2&lt;/span>$ git submodule add https://github.com/chipzoller/hugo-clarity themes/clarity
+&lt;span class="ln"> 3&lt;/span>Cloning into &lt;span class="s1">&amp;#39;/Users/brightzheng/development/blog/brightzheng100/themes/clarity&amp;#39;&lt;/span>...
+&lt;span class="ln"> 4&lt;/span>remote: Enumerating objects: 3126, &lt;span class="k">done&lt;/span>.
+&lt;span class="ln"> 5&lt;/span>remote: Counting objects: 100% &lt;span class="o">(&lt;/span>285/285&lt;span class="o">)&lt;/span>, &lt;span class="k">done&lt;/span>.
+&lt;span class="ln"> 6&lt;/span>remote: Compressing objects: 100% &lt;span class="o">(&lt;/span>125/125&lt;span class="o">)&lt;/span>, &lt;span class="k">done&lt;/span>.
+&lt;span class="ln"> 7&lt;/span>remote: Total &lt;span class="m">3126&lt;/span> &lt;span class="o">(&lt;/span>delta 150&lt;span class="o">)&lt;/span>, reused &lt;span class="m">249&lt;/span> &lt;span class="o">(&lt;/span>delta 136&lt;span class="o">)&lt;/span>, pack-reused &lt;span class="m">2841&lt;/span>
+&lt;span class="ln"> 8&lt;/span>Receiving objects: 100% &lt;span class="o">(&lt;/span>3126/3126&lt;span class="o">)&lt;/span>, 5.15 MiB &lt;span class="p">|&lt;/span> 8.37 MiB/s, &lt;span class="k">done&lt;/span>.
+&lt;span class="ln"> 9&lt;/span>Resolving deltas: 100% &lt;span class="o">(&lt;/span>1809/1809&lt;span class="o">)&lt;/span>, &lt;span class="k">done&lt;/span>.
+&lt;span class="ln">10&lt;/span>
+&lt;span class="ln">11&lt;/span>&lt;span class="c1"># Copy or move over the sample site&lt;/span>
+&lt;span class="ln">12&lt;/span>$ ls
+&lt;span class="ln">13&lt;/span>archetypes config.toml content data layouts static themes
+&lt;span class="ln">14&lt;/span>$ ls themes/clarity/exampleSite/
+&lt;span class="ln">15&lt;/span>archetypes config content layouts LICENSE README.md resources stati
+&lt;span class="ln">16&lt;/span>$ cp -a themes/clarity/exampleSite/* .
+&lt;span class="ln">17&lt;/span>$ ls
+&lt;span class="ln">18&lt;/span>archetypes config config.toml content data layouts LICENSE README.md resources static themes
+&lt;span class="ln">19&lt;/span>
+&lt;span class="ln">20&lt;/span>&lt;span class="c1"># Enable the theme&lt;/span>
+&lt;span class="ln">21&lt;/span>$ &lt;span class="nb">echo&lt;/span> &lt;span class="nv">theme&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="se">\&amp;#34;&lt;/span>clarity&lt;span class="se">\&amp;#34;&lt;/span> &amp;gt;&amp;gt; config.toml
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-4-add-some-content">Step 4: Add Some Content&lt;/h2>
+&lt;p>You can manually create content files (for example as content/&lt;CATEGORY>/&lt;FILE>.&lt;FORMAT>) and provide metadata in them, however you can use the new command to do a few things for you (like add title and date):&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ hugo new post/getting-started.md
+&lt;span class="ln">2&lt;/span>/Users/brightzheng/development/blog/brightzheng100/content/post/getting-started.md created
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-5-start-the-hugo-server">Step 5: Start the Hugo server&lt;/h2>
+&lt;p>Now, start the Hugo server with drafts enabled:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ hugo server -D
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-6-customize-the-theme">Step 6: Customize the Theme&lt;/h2>
+&lt;p>Your new site already looks great, but you will want to tweak it a little before you release it to the public.&lt;/p>
+&lt;p>Open up config.toml in a text editor:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>baseURL = &amp;#34;https://example.org/&amp;#34;
+&lt;span class="ln">2&lt;/span>languageCode = &amp;#34;en-us&amp;#34;
+&lt;span class="ln">3&lt;/span>title = &amp;#34;My New Hugo Site&amp;#34;
+&lt;span class="ln">4&lt;/span>theme = &amp;#34;ananke&amp;#34;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-7-build-static-pages">Step 7: Build static pages&lt;/h2>
+&lt;p>It is simple. Just call:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>hugo -D
+&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>Note: Output will be in ./public/ directory by default (-d/--destination flag to change it, or set publishdir in the config file).&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="step-8-further-customization">Step 8: Further Customization&lt;/h2>
+&lt;h3 id="language">Language&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>/config/languages.toml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>What I've done:&lt;/p>
+&lt;ul>
+&lt;li>Updated the supported languages with English only for now&lt;/li>
+&lt;/ul>
+&lt;h3 id="menu">Menu&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>/config/_default/menu.en.toml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>What I've done:&lt;/p>
+&lt;ul>
+&lt;li>Refined the menu items&lt;/li>
+&lt;/ul>
+&lt;h3 id="params">Params&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>/config/_default/params.toml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>What I've done:&lt;/p>
+&lt;ul>
+&lt;li>Changed the params by following the comments&lt;/li>
+&lt;li>Major changes including &lt;code>introDescription&lt;/code>, &lt;code>mainSections&lt;/code>, &lt;code>logo&lt;/code>, &lt;code>footerLogo&lt;/code>, &lt;code>iconsDir&lt;/code> etc.&lt;/li>
+&lt;/ul>
+&lt;h3 id="archetypes">archetypes&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>/archetypes
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>What I've done:&lt;/p>
+&lt;ul>
+&lt;li>added &lt;code>diary.md&lt;/code>&lt;/li>
+&lt;li>and updated all these &amp;quot;templates&amp;quot;&lt;/li>
+&lt;/ul>
+&lt;h3 id="favicon">Favicon&lt;/h3>
+&lt;p>Built a favicon with 32x32 specs.
+Created a new folder named &lt;code>icons&lt;/code> under &lt;code>/static&lt;/code> and put the favicon as &lt;code>favicon-32x32.png&lt;/code> under this folder.&lt;/p>
+&lt;h2 id="step-9-host-it-on-github">Step 9: Host It on GitHub&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>Generate a new token in: &lt;a href="https://github.com/settings/tokens">https://github.com/settings/tokens&lt;/a>. And then make a copy of the token generated;&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Create two repositories:&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>&lt;code>&amp;lt;USERNAME&amp;gt;/&amp;lt;USERNAME&amp;gt;.github.io.private&lt;/code> to host Hugo project, as a &lt;strong>private project&lt;/strong>, like &lt;code>brightzheng100/brightzheng100.github.io.private&lt;/code> -- well, the naming here is not important;&lt;/li>
+&lt;li>&lt;code>&amp;lt;USERNAME&amp;gt;/&amp;lt;USERNAME&amp;gt;.github.io.private&lt;/code> to host published project, as a &lt;strong>public project&lt;/strong>, like &lt;code>brightzheng100/brightzheng100.github.io&lt;/code> -- the naming is important as per GitHub's conversion;&lt;/li>
+&lt;/ul>
+&lt;ol start="3">
+&lt;li>
+&lt;p>Create a Secret named &lt;code>TOKEN&lt;/code> under &lt;code>&amp;lt;USERNAME&amp;gt;/&amp;lt;USERNAME&amp;gt;.github.io.private&lt;/code>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Add GitHub Actions for GitHub Pages:&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>mkdir -p .github/workflows
+&lt;span class="ln"> 2&lt;/span>cat &amp;gt; .github/workflows/gh-pages.yml &lt;span class="s">&amp;lt;&amp;lt;&amp;#39;EOF&amp;#39;
+&lt;/span>&lt;span class="ln"> 3&lt;/span>&lt;span class="s">name: github pages
+&lt;/span>&lt;span class="ln"> 4&lt;/span>&lt;span class="s">
+&lt;/span>&lt;span class="ln"> 5&lt;/span>&lt;span class="s">on:
+&lt;/span>&lt;span class="ln"> 6&lt;/span>&lt;span class="s"> push:
+&lt;/span>&lt;span class="ln"> 7&lt;/span>&lt;span class="s"> branches:
+&lt;/span>&lt;span class="ln"> 8&lt;/span>&lt;span class="s"> - main
+&lt;/span>&lt;span class="ln"> 9&lt;/span>&lt;span class="s">
+&lt;/span>&lt;span class="ln">10&lt;/span>&lt;span class="s">jobs:
+&lt;/span>&lt;span class="ln">11&lt;/span>&lt;span class="s"> deploy:
+&lt;/span>&lt;span class="ln">12&lt;/span>&lt;span class="s"> runs-on: ubuntu-20.04
+&lt;/span>&lt;span class="ln">13&lt;/span>&lt;span class="s"> steps:
+&lt;/span>&lt;span class="ln">14&lt;/span>&lt;span class="s"> - uses: actions/checkout@v2
+&lt;/span>&lt;span class="ln">15&lt;/span>&lt;span class="s"> with:
+&lt;/span>&lt;span class="ln">16&lt;/span>&lt;span class="s"> submodules: true # Fetch Hugo themes (true OR recursive)
+&lt;/span>&lt;span class="ln">17&lt;/span>&lt;span class="s"> fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
+&lt;/span>&lt;span class="ln">18&lt;/span>&lt;span class="s">
+&lt;/span>&lt;span class="ln">19&lt;/span>&lt;span class="s"> - name: Setup Hugo
+&lt;/span>&lt;span class="ln">20&lt;/span>&lt;span class="s"> uses: peaceiris/actions-hugo@v2
+&lt;/span>&lt;span class="ln">21&lt;/span>&lt;span class="s"> with:
+&lt;/span>&lt;span class="ln">22&lt;/span>&lt;span class="s"> hugo-version: &amp;#39;latest&amp;#39;
+&lt;/span>&lt;span class="ln">23&lt;/span>&lt;span class="s">
+&lt;/span>&lt;span class="ln">24&lt;/span>&lt;span class="s"> - name: Build
+&lt;/span>&lt;span class="ln">25&lt;/span>&lt;span class="s"> run: hugo --minify
+&lt;/span>&lt;span class="ln">26&lt;/span>&lt;span class="s">
+&lt;/span>&lt;span class="ln">27&lt;/span>&lt;span class="s"> - name: Deploy
+&lt;/span>&lt;span class="ln">28&lt;/span>&lt;span class="s"> uses: peaceiris/actions-gh-pages@v3
+&lt;/span>&lt;span class="ln">29&lt;/span>&lt;span class="s"> if: github.ref == &amp;#39;refs/heads/main&amp;#39;
+&lt;/span>&lt;span class="ln">30&lt;/span>&lt;span class="s"> with:
+&lt;/span>&lt;span class="ln">31&lt;/span>&lt;span class="s"> github_token: ${{ secrets.GITHUB_TOKEN }} # TOKEN is the secret that we just created
+&lt;/span>&lt;span class="ln">32&lt;/span>&lt;span class="s"> publish_dir: ./public
+&lt;/span>&lt;span class="ln">33&lt;/span>&lt;span class="s">EOF&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="5">
+&lt;li>Commit and push our code to&lt;/li>
+&lt;/ol>
+&lt;h2 id="references">References&lt;/h2>
+&lt;p>Hugo Quick Start:
+&lt;a href="https://gohugo.io/getting-started/quick-start/">https://gohugo.io/getting-started/quick-start/&lt;/a>&lt;/p>
+&lt;p>Hugo Themes guide:
+&lt;a href="https://themes.gohugo.io/hugo-clarity/">https://themes.gohugo.io/hugo-clarity/&lt;/a>&lt;/p>
+&lt;p>Directory Structure:
+&lt;a href="https://gohugo.io/getting-started/directory-structure/">https://gohugo.io/getting-started/directory-structure/&lt;/a>&lt;/p>
+&lt;p>Host on GitHub
+&lt;a href="https://gohugo.io/hosting-and-deployment/hosting-on-github/">https://gohugo.io/hosting-and-deployment/hosting-on-github/&lt;/a>&lt;/p></description></item></channel></rss>
