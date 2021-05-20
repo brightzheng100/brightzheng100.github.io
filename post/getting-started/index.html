@@ -62,40 +62,48 @@ This is the one I picked: <a href=https://themes.gohugo.io/hugo-clarity/>https:/
 </code></pre></div><p>What I've done:</p><ul><li>Refined the menu items</li></ul><h3 id=params>Params</h3><div class=highlight><pre class=chroma><code class=language-fallback data-lang=fallback><span class=ln>1</span>/config/_default/params.toml
 </code></pre></div><p>What I've done:</p><ul><li>Changed the params by following the comments</li><li>Major changes including <code>introDescription</code>, <code>mainSections</code>, <code>logo</code>, <code>footerLogo</code>, <code>iconsDir</code> etc.</li></ul><h3 id=archetypes>archetypes</h3><div class=highlight><pre class=chroma><code class=language-fallback data-lang=fallback><span class=ln>1</span>/archetypes
 </code></pre></div><p>What I've done:</p><ul><li>added <code>diary.md</code></li><li>and updated all these "templates"</li></ul><h3 id=favicon>Favicon</h3><p>Built a favicon with 32x32 specs.
-Created a new folder named <code>icons</code> under <code>/static</code> and put the favicon as <code>favicon-32x32.png</code> under this folder.</p><h2 id=step-9-host-it-on-github>Step 9: Host It on GitHub</h2><ol><li><p>Generate a new token in: <a href=https://github.com/settings/tokens>https://github.com/settings/tokens</a>. And then make a copy of the token generated;</p></li><li><p>Create two repositories:</p></li></ol><ul><li><code>&lt;USERNAME>/&lt;USERNAME>.github.io.private</code> to host Hugo project, as a <strong>private project</strong>, like <code>brightzheng100/brightzheng100.github.io.private</code> -- well, the naming here is not important;</li><li><code>&lt;USERNAME>/&lt;USERNAME>.github.io.private</code> to host published project, as a <strong>public project</strong>, like <code>brightzheng100/brightzheng100.github.io</code> -- the naming is important as per GitHub's conversion;</li></ul><ol start=3><li><p>Create a Secret named <code>TOKEN</code> under <code>&lt;USERNAME>/&lt;USERNAME>.github.io.private</code>.</p></li><li><p>Add GitHub Actions for GitHub Pages:</p></li></ol><div class=highlight><pre class=chroma><code class=language-sh data-lang=sh><span class=ln> 1</span>mkdir -p .github/workflows
-<span class=ln> 2</span>cat &gt; .github/workflows/gh-pages.yml <span class=s>&lt;&lt;&#39;EOF&#39;
-</span><span class=ln> 3</span><span class=s>name: github pages
-</span><span class=ln> 4</span><span class=s>
-</span><span class=ln> 5</span><span class=s>on:
-</span><span class=ln> 6</span><span class=s>  push:
-</span><span class=ln> 7</span><span class=s>    branches:
-</span><span class=ln> 8</span><span class=s>      - main
-</span><span class=ln> 9</span><span class=s>
-</span><span class=ln>10</span><span class=s>jobs:
-</span><span class=ln>11</span><span class=s>  deploy:
-</span><span class=ln>12</span><span class=s>    runs-on: ubuntu-20.04
-</span><span class=ln>13</span><span class=s>    steps:
-</span><span class=ln>14</span><span class=s>      - uses: actions/checkout@v2
-</span><span class=ln>15</span><span class=s>        with:
-</span><span class=ln>16</span><span class=s>          submodules: true                      # Fetch Hugo themes (true OR recursive)
-</span><span class=ln>17</span><span class=s>          fetch-depth: 0                        # Fetch all history for .GitInfo and .Lastmod
-</span><span class=ln>18</span><span class=s>
-</span><span class=ln>19</span><span class=s>      - name: Setup Hugo
-</span><span class=ln>20</span><span class=s>        uses: peaceiris/actions-hugo@v2
-</span><span class=ln>21</span><span class=s>        with:
-</span><span class=ln>22</span><span class=s>          hugo-version: &#39;latest&#39;
-</span><span class=ln>23</span><span class=s>
-</span><span class=ln>24</span><span class=s>      - name: Build
-</span><span class=ln>25</span><span class=s>        run: hugo --minify
-</span><span class=ln>26</span><span class=s>
-</span><span class=ln>27</span><span class=s>      - name: Deploy
-</span><span class=ln>28</span><span class=s>        uses: peaceiris/actions-gh-pages@v3
-</span><span class=ln>29</span><span class=s>        if: github.ref == &#39;refs/heads/main&#39;
-</span><span class=ln>30</span><span class=s>        with:
-</span><span class=ln>31</span><span class=s>          github_token: ${{ secrets.GITHUB_TOKEN }}    # TOKEN is the secret that we just created
-</span><span class=ln>32</span><span class=s>          publish_dir: ./public
-</span><span class=ln>33</span><span class=s>EOF</span>
-</code></pre></div><ol start=5><li>Commit and push our code to</li></ol><h2 id=references>References</h2><p>Hugo Quick Start:
+Created a new folder named <code>icons</code> under <code>/static</code> and put the favicon as <code>favicon-32x32.png</code> under this folder.</p><h2 id=step-9-host-it-on-github>Step 9: Host It on GitHub</h2><ol><li><p>Generate a new personal token in: <a href=https://github.com/settings/tokens>https://github.com/settings/tokens</a>. And then make a copy of the token generated;</p></li><li><p>Create two repositories:</p></li></ol><ul><li><code>&lt;USERNAME>/&lt;USERNAME>.github.io.private</code> to host Hugo project, as a <strong>private project</strong>, like <code>brightzheng100/brightzheng100.github.io.private</code> -- well, the naming here is not important;</li><li><code>&lt;USERNAME>/&lt;USERNAME>.github.io.private</code> to host published website project, as a <strong>public project</strong>, like <code>brightzheng100/brightzheng100.github.io</code> -- the naming is important as per GitHub's convention;</li></ul><ol start=3><li><p>Create a <code>Secret</code> named <code>TOKEN</code> under <code>&lt;USERNAME>/&lt;USERNAME>.github.io.private</code>.</p></li><li><p>Add <code>.github/workflows/gh-pages.yml</code> to enable GitHub Actions:</p></li></ol><div class=highlight><pre class=chroma><code class=language-sh data-lang=sh><span class=ln> 1</span>mkdir -p .github/workflows
+<span class=ln> 2</span>
+<span class=ln> 3</span>cat &gt; .github/workflows/gh-pages.yml <span class=s>&lt;&lt;&#39;EOF&#39;
+</span><span class=ln> 4</span><span class=s>name: Hugo Website Generator
+</span><span class=ln> 5</span><span class=s>
+</span><span class=ln> 6</span><span class=s>on:
+</span><span class=ln> 7</span><span class=s>  push:
+</span><span class=ln> 8</span><span class=s>    branches:
+</span><span class=ln> 9</span><span class=s>      - main    # Note: I&#39;m using main branch in my private repo
+</span><span class=ln>10</span><span class=s>
+</span><span class=ln>11</span><span class=s>jobs:
+</span><span class=ln>12</span><span class=s>  deploy:
+</span><span class=ln>13</span><span class=s>    runs-on: ubuntu-20.04
+</span><span class=ln>14</span><span class=s>    steps:
+</span><span class=ln>15</span><span class=s>      - uses: actions/checkout@v2
+</span><span class=ln>16</span><span class=s>        with:
+</span><span class=ln>17</span><span class=s>          submodules: true  # Fetch Hugo themes (true OR recursive)
+</span><span class=ln>18</span><span class=s>          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+</span><span class=ln>19</span><span class=s>
+</span><span class=ln>20</span><span class=s>      - name: Setup Hugo
+</span><span class=ln>21</span><span class=s>        uses: peaceiris/actions-hugo@v2
+</span><span class=ln>22</span><span class=s>        with:
+</span><span class=ln>23</span><span class=s>          hugo-version: &#39;latest&#39;
+</span><span class=ln>24</span><span class=s>
+</span><span class=ln>25</span><span class=s>      - name: Build
+</span><span class=ln>26</span><span class=s>        run: hugo --minify
+</span><span class=ln>27</span><span class=s>
+</span><span class=ln>28</span><span class=s>      - name: Deploy
+</span><span class=ln>29</span><span class=s>        uses: peaceiris/actions-gh-pages@v3
+</span><span class=ln>30</span><span class=s>        if: github.ref == &#39;refs/heads/main&#39;
+</span><span class=ln>31</span><span class=s>        with:
+</span><span class=ln>32</span><span class=s>          personal_token: ${{ secrets.TOKEN }}
+</span><span class=ln>33</span><span class=s>          external_repository: brightzheng100/brightzheng100.github.io
+</span><span class=ln>34</span><span class=s>          publish_branch: master
+</span><span class=ln>35</span><span class=s>          publish_dir: ./public
+</span><span class=ln>36</span><span class=s>EOF</span>
+</code></pre></div><ol start=5><li>Commit and push our code to the private project:</li></ol><div class=highlight><pre class=chroma><code class=language-sh data-lang=sh><span class=ln>1</span>git add .
+<span class=ln>2</span>git commit -am <span class=s2>&#34;initial commit&#34;</span>
+<span class=ln>3</span>git branch -M main
+<span class=ln>4</span>git remote add origin git@github.com:brightzheng100/brightzheng100.github.io.private.git
+<span class=ln>5</span>git push -u origin main
+</code></pre></div><p>That's it!</p><h2 id=references>References</h2><p>Hugo Quick Start:
 <a href=https://gohugo.io/getting-started/quick-start/>https://gohugo.io/getting-started/quick-start/</a></p><p>Hugo Themes guide:
 <a href=https://themes.gohugo.io/hugo-clarity/>https://themes.gohugo.io/hugo-clarity/</a></p><p>Directory Structure:
 <a href=https://gohugo.io/getting-started/directory-structure/>https://gohugo.io/getting-started/directory-structure/</a></p><p>Host on GitHub
