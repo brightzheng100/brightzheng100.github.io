@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Operator-Framework on The future is Bright</title><link>https://brightzheng100.github.io/tags/operator-framework/</link><description>Recent content in Operator-Framework on The future is Bright</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2021 Bright Zheg. All Rights Reserved.</copyright><lastBuildDate>Sat, 05 Jun 2021 11:55:46 +0800</lastBuildDate><atom:link href="https://brightzheng100.github.io/tags/operator-framework/index.xml" rel="self" type="application/rss+xml"/><item><title>Diving Deeper Into Operator Framwork, Part 1</title><link>https://brightzheng100.github.io/post/2021/06/diving-deeper-into-operator-framwork-part-1/</link><pubDate>Sat, 05 Jun 2021 11:55:46 +0800</pubDate><guid>https://brightzheng100.github.io/post/2021/06/diving-deeper-into-operator-framwork-part-1/</guid><description>
+&lt;style type="text/css">
+.twitter-tweet {
+font: 14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+border-left: 4px solid #2b7bb9;
+padding-left: 1.5em;
+color: #555;
+}
+.twitter-tweet a {
+color: #2b7bb9;
+text-decoration: none;
+}
+blockquote.twitter-tweet a:hover,
+blockquote.twitter-tweet a:focus {
+text-decoration: underline;
+}
+&lt;/style>
+&lt;blockquote class="twitter-tweet">&lt;p lang="en" dir="ltr">Kubernetes is a platform for building platforms. It&amp;#39;s a better place to start; not the endgame.&lt;/p>&amp;mdash; Kelsey Hightower (@kelseyhightower) &lt;a href="https://twitter.com/kelseyhightower/status/935252923721793536?ref_src=twsrc%5Etfw">November 27, 2017&lt;/a>&lt;/blockquote>
+&lt;p>When managing and operating complex software on Kubernetes, it's very common to think about the operator pattern which can simplify a lot of things for day 1 and day 2, from the SRE/Operator perspective, with the cost of coding.&lt;/p>
+&lt;p>Believe it or not, there are a lot of boilerplate code that we need to spend time with, if you'd build Kubernetes operators from scratch.&lt;/p>
+&lt;p>Fortunately, there are a few great operator frameworks in the OSS Kubernetes community that can really help us out.&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/kubernetes-sigs/kubebuilder">&lt;code>kubebuilder&lt;/code>&lt;/a>, curated by one of the Kubernetes SIGs with a focus on building operators in Golang;&lt;/li>
+&lt;li>&lt;a href="https://sdk.operatorframework.io/">&lt;code>Operator SDK&lt;/code>&lt;/a>, led by Red Hat, bringing in more &amp;quot;enterprise&amp;quot; taste with broader language support (e.g. Golang, Helm, Ansible) and &lt;a href="https://olm.operatorframework.io/">&lt;code>Operator Lifecycle Manager (OLM)&lt;/code>&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;p>Before you start struggling with &amp;quot;oh, which one should I go with&amp;quot;, let me share a little bit about what I understand:&lt;/p>
+&lt;ol>
+&lt;li>Both are built on top of &lt;a href="https://github.com/kubernetes-sigs/controller-runtime">&lt;code>controller-runtime&lt;/code>&lt;/a> library;&lt;/li>
+&lt;li>Both are tools for scaffolding and code generation to bootstrap a new operator project fast and the folder structures scaffolded are highly similar;&lt;/li>
+&lt;li>Both contributors are active in Kubernetes' Slack channel #kubernetes-operators and are contributing heavily to upstream &lt;code>controller-runtime&lt;/code>;&lt;/li>
+&lt;li>Maybe more in common that I'm not aware of.&lt;/li>
+&lt;/ol>
+&lt;p>In short, they have many in common.&lt;/p>
+&lt;p>So if you simply just want to try building an operator for learning, pick any of them and you're good to rock.&lt;/p>
+&lt;p>In this blog series, I'll dive deeper into &lt;code>Operator SDK&lt;/code> and hopefully you can figure out the differences along the way.&lt;/p>
+&lt;p>There are two part of this blog series:&lt;/p>
+&lt;ul>
+&lt;li>Part 1: which is this blog, let me walk you through a typical Kubernetes operator building process;&lt;/li>
+&lt;li>Part 2: I'll dive deeper into &lt;a href="https://olm.operatorframework.io/">&lt;code>Operator Lifecycle Manager (OLM)&lt;/code>&lt;/a>, &lt;a href="https://brightzheng100.github.io/post/2021/06/diving-deeper-into-operator-framwork-part-2/">here&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="quick-start">Quick Start&lt;/h2>
+&lt;p>The best place to start with &lt;code>Operator SDK&lt;/code> should be here: &lt;a href="https://sdk.operatorframework.io/docs/">https://sdk.operatorframework.io/docs/&lt;/a>.&lt;/p>
+&lt;p>And we'll focus on building the operator by Golang, in a Mac. So your mileage may slightly vary but I guarantee that you'd still easily get the idea.&lt;/p>
+&lt;h3 id="preparation">Preparation&lt;/h3>
+&lt;p>We need a Kubernetes cluster, after all, we're developing Kubernetes stuff.&lt;/p>
+&lt;p>The simplest way I can think of is to spin up a &lt;a href="https://kind.sigs.k8s.io/">&lt;code>kind&lt;/code>&lt;/a> cluster.&lt;/p>
+&lt;blockquote>
+&lt;p>Prerequisites: Docker Desktop is up and running.&lt;/p>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Install kind CLI if you haven&amp;#39;t&lt;/span>
+&lt;span class="ln"> 2&lt;/span>$ brew install kind
+&lt;span class="ln"> 3&lt;/span>
+&lt;span class="ln"> 4&lt;/span>&lt;span class="c1"># Prepare a simple config file&lt;/span>
+&lt;span class="ln"> 5&lt;/span>$ cat &amp;gt; kind-cluster.yaml &lt;span class="s">&amp;lt;&amp;lt;EOF
+&lt;/span>&lt;span class="ln"> 6&lt;/span>&lt;span class="s">kind: Cluster
+&lt;/span>&lt;span class="ln"> 7&lt;/span>&lt;span class="s">apiVersion: kind.x-k8s.io/v1alpha4
+&lt;/span>&lt;span class="ln"> 8&lt;/span>&lt;span class="s">nodes:
+&lt;/span>&lt;span class="ln"> 9&lt;/span>&lt;span class="s">- role: control-plane
+&lt;/span>&lt;span class="ln">10&lt;/span>&lt;span class="s">- role: worker
+&lt;/span>&lt;span class="ln">11&lt;/span>&lt;span class="s">EOF&lt;/span>
+&lt;span class="ln">12&lt;/span>
+&lt;span class="ln">13&lt;/span>&lt;span class="c1"># And then create the cluster&lt;/span>
+&lt;span class="ln">14&lt;/span>$ kind create cluster --config kind-cluster.yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once the cluster is created, the current context will be automatically changed to the newly provisioned &lt;code>kind&lt;/code> cluster.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Let&amp;#39;s check the nodes&lt;/span>
+&lt;span class="ln"> 2&lt;/span>$ kubectl get nodes
+&lt;span class="ln"> 3&lt;/span>NAME STATUS ROLES AGE VERSION
+&lt;span class="ln"> 4&lt;/span>kind-control-plane Ready control-plane,master 3h47m v1.21.1
+&lt;span class="ln"> 5&lt;/span>kind-worker Ready &amp;lt;none&amp;gt; 3h47m v1.21.1
+&lt;span class="ln"> 6&lt;/span>
+&lt;span class="ln"> 7&lt;/span>&lt;span class="c1"># And the pods in kube-system&lt;/span>
+&lt;span class="ln"> 8&lt;/span>$ kubectl get pods -n kube-system
+&lt;span class="ln"> 9&lt;/span>NAME READY STATUS RESTARTS AGE
+&lt;span class="ln">10&lt;/span>coredns-558bd4d5db-jk8h8 1/1 Running &lt;span class="m">0&lt;/span> 3h47m
+&lt;span class="ln">11&lt;/span>coredns-558bd4d5db-klnjx 1/1 Running &lt;span class="m">0&lt;/span> 3h47m
+&lt;span class="ln">12&lt;/span>etcd-kind-control-plane 1/1 Running &lt;span class="m">0&lt;/span> 3h47m
+&lt;span class="ln">13&lt;/span>kindnet-7sx5m 1/1 Running &lt;span class="m">0&lt;/span> 3h47m
+&lt;span class="ln">14&lt;/span>kindnet-f9pj7 1/1 Running &lt;span class="m">0&lt;/span> 3h46m
+&lt;span class="ln">15&lt;/span>kube-apiserver-kind-control-plane 1/1 Running &lt;span class="m">0&lt;/span> 3h47m
+&lt;span class="ln">16&lt;/span>kube-controller-manager-kind-control-plane 1/1 Running &lt;span class="m">0&lt;/span> 3h47m
+&lt;span class="ln">17&lt;/span>kube-proxy-d2w44 1/1 Running &lt;span class="m">0&lt;/span> 3h46m
+&lt;span class="ln">18&lt;/span>kube-proxy-lvxhm 1/1 Running &lt;span class="m">0&lt;/span> 3h47m
+&lt;span class="ln">19&lt;/span>kube-scheduler-kind-control-plane 1/1 Running &lt;span class="m">0&lt;/span> 3h47m
+&lt;span class="ln">20&lt;/span>
+&lt;span class="ln">21&lt;/span>&lt;span class="c1"># Yes, the &amp;#34;nodes&amp;#34; are actually Docker container -- that&amp;#39;s why it&amp;#39;s called &amp;#34;kind&amp;#34;, Kubernetes in Docker&lt;/span>
+&lt;span class="ln">22&lt;/span>$ docker ps
+&lt;span class="ln">23&lt;/span>CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES
+&lt;span class="ln">24&lt;/span>c18e7a78bec6 kindest/node:v1.21.1 &lt;span class="s2">&amp;#34;/usr/local/bin/entr…&amp;#34;&lt;/span> &lt;span class="m">4&lt;/span> hours ago Up &lt;span class="m">4&lt;/span> hours 127.0.0.1:50057-&amp;gt;6443/tcp kind-control-plane
+&lt;span class="ln">25&lt;/span>b4f4856f7181 kindest/node:v1.21.1 &lt;span class="s2">&amp;#34;/usr/local/bin/entr…&amp;#34;&lt;/span> &lt;span class="m">4&lt;/span> hours ago Up &lt;span class="m">4&lt;/span> hours kind-worker
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="installing-operator-sdk">Installing &lt;code>operator-sdk&lt;/code>&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># Install operator-sdk by brew, if you haven&amp;#39;t&lt;/span>
+&lt;span class="ln">2&lt;/span>$ brew install operator-sdk
+&lt;span class="ln">3&lt;/span>
+&lt;span class="ln">4&lt;/span>&lt;span class="c1"># Check the installed version&lt;/span>
+&lt;span class="ln">5&lt;/span>$ operator-sdk version
+&lt;span class="ln">6&lt;/span>operator-sdk version: &lt;span class="s2">&amp;#34;v1.7.2&amp;#34;&lt;/span>, commit: &lt;span class="s2">&amp;#34;6db9787d4e9ff63f344e23bfa387133112bda56b&amp;#34;&lt;/span>, kubernetes version: &lt;span class="s2">&amp;#34;1.19.4&amp;#34;&lt;/span>, go version: &lt;span class="s2">&amp;#34;go1.15.5&amp;#34;&lt;/span>, GOOS: &lt;span class="s2">&amp;#34;darwin&amp;#34;&lt;/span>, GOARCH: &lt;span class="s2">&amp;#34;amd64&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="initializing-an-operator">Initializing an operator&lt;/h3>
+&lt;p>Let's initialize an operator, say namely &amp;quot;memcached-operator&amp;quot;.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>$ mkdir memcached-operator &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="nb">cd&lt;/span> memcached-operator
+&lt;span class="ln"> 2&lt;/span>$ operator-sdk init --domain example.com --repo github.com/example/memcached-operator
+&lt;span class="ln"> 3&lt;/span>
+&lt;span class="ln"> 4&lt;/span>&lt;span class="c1"># See what we got&lt;/span>
+&lt;span class="ln"> 5&lt;/span>$ tree
+&lt;span class="ln"> 6&lt;/span>.
+&lt;span class="ln"> 7&lt;/span>├── Dockerfile
+&lt;span class="ln"> 8&lt;/span>├── Makefile
+&lt;span class="ln"> 9&lt;/span>├── PROJECT
+&lt;span class="ln">10&lt;/span>├── config
+&lt;span class="ln">11&lt;/span>│   ├── default
+&lt;span class="ln">12&lt;/span>│   │   ├── kustomization.yaml
+&lt;span class="ln">13&lt;/span>│   │   ├── manager_auth_proxy_patch.yaml
+&lt;span class="ln">14&lt;/span>│   │   └── manager_config_patch.yaml
+&lt;span class="ln">15&lt;/span>│   ├── manager
+&lt;span class="ln">16&lt;/span>│   │   ├── controller_manager_config.yaml
+&lt;span class="ln">17&lt;/span>│   │   ├── kustomization.yaml
+&lt;span class="ln">18&lt;/span>│   │   └── manager.yaml
+&lt;span class="ln">19&lt;/span>│   ├── manifests
+&lt;span class="ln">20&lt;/span>│   │   └── kustomization.yaml
+&lt;span class="ln">21&lt;/span>│   ├── prometheus
+&lt;span class="ln">22&lt;/span>│   │   ├── kustomization.yaml
+&lt;span class="ln">23&lt;/span>│   │   └── monitor.yaml
+&lt;span class="ln">24&lt;/span>│   ├── rbac
+&lt;span class="ln">25&lt;/span>│   │   ├── auth_proxy_client_clusterrole.yaml
+&lt;span class="ln">26&lt;/span>│   │   ├── auth_proxy_role.yaml
+&lt;span class="ln">27&lt;/span>│   │   ├── auth_proxy_role_binding.yaml
+&lt;span class="ln">28&lt;/span>│   │   ├── auth_proxy_service.yaml
+&lt;span class="ln">29&lt;/span>│   │   ├── kustomization.yaml
+&lt;span class="ln">30&lt;/span>│   │   ├── leader_election_role.yaml
+&lt;span class="ln">31&lt;/span>│   │   ├── leader_election_role_binding.yaml
+&lt;span class="ln">32&lt;/span>│   │   ├── role_binding.yaml
+&lt;span class="ln">33&lt;/span>│   │   └── service_account.yaml
+&lt;span class="ln">34&lt;/span>│   └── scorecard
+&lt;span class="ln">35&lt;/span>│   ├── bases
+&lt;span class="ln">36&lt;/span>│   │   └── config.yaml
+&lt;span class="ln">37&lt;/span>│   ├── kustomization.yaml
+&lt;span class="ln">38&lt;/span>│   └── patches
+&lt;span class="ln">39&lt;/span>│   ├── basic.config.yaml
+&lt;span class="ln">40&lt;/span>│   └── olm.config.yaml
+&lt;span class="ln">41&lt;/span>├── go.mod
+&lt;span class="ln">42&lt;/span>├── go.sum
+&lt;span class="ln">43&lt;/span>├── hack
+&lt;span class="ln">44&lt;/span>│   └── boilerplate.go.txt
+&lt;span class="ln">45&lt;/span>└── main.go
+&lt;span class="ln">46&lt;/span>
+&lt;span class="ln">47&lt;/span>&lt;span class="m">10&lt;/span> directories, &lt;span class="m">29&lt;/span> files
+&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>Note: as of writing, the &lt;code>operator-sdk&lt;/code> &lt;strong>v1.7.2&lt;/strong> is compatible with Golang version of &lt;code>1.13 &amp;lt;= version &amp;lt; 1.16&lt;/code>, so if you're with Golang version &lt;code>&amp;gt;=1.16&lt;/code>, try adding the &lt;code>--skip-go-version-check&lt;/code> flag in &lt;code>operator-sdk init&lt;/code> command.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="creating-apis">Creating APIs&lt;/h3>
+&lt;p>We just initialized it with an empty structure. Let's create a simple API named &amp;quot;Memcached&amp;quot;:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Create an API named &amp;#34;Memcached&amp;#34;&lt;/span>
+&lt;span class="ln"> 2&lt;/span>$ operator-sdk create api --group cache --version v1alpha1 --kind Memcached --resource --controller
+&lt;span class="ln"> 3&lt;/span>
+&lt;span class="ln"> 4&lt;/span>&lt;span class="c1"># See what we got again&lt;/span>
+&lt;span class="ln"> 5&lt;/span>$ tree
+&lt;span class="ln"> 6&lt;/span>.
+&lt;span class="ln"> 7&lt;/span>├── Dockerfile
+&lt;span class="ln"> 8&lt;/span>├── Makefile
+&lt;span class="ln"> 9&lt;/span>├── PROJECT
+&lt;span class="ln">10&lt;/span>├── api
+&lt;span class="ln">11&lt;/span>│   └── v1alpha1
+&lt;span class="ln">12&lt;/span>│   ├── groupversion_info.go
+&lt;span class="ln">13&lt;/span>│   ├── memcached_types.go
+&lt;span class="ln">14&lt;/span>│   └── zz_generated.deepcopy.go
+&lt;span class="ln">15&lt;/span>├── bin
+&lt;span class="ln">16&lt;/span>│   └── controller-gen
+&lt;span class="ln">17&lt;/span>├── config
+&lt;span class="ln">18&lt;/span>│   ├── crd
+&lt;span class="ln">19&lt;/span>│   │   ├── kustomization.yaml
+&lt;span class="ln">20&lt;/span>│   │   ├── kustomizeconfig.yaml
+&lt;span class="ln">21&lt;/span>│   │   └── patches
+&lt;span class="ln">22&lt;/span>│   │   ├── cainjection_in_memcacheds.yaml
+&lt;span class="ln">23&lt;/span>│   │   └── webhook_in_memcacheds.yaml
+&lt;span class="ln">24&lt;/span>│   ├── default
+&lt;span class="ln">25&lt;/span>│   │   ├── kustomization.yaml
+&lt;span class="ln">26&lt;/span>│   │   ├── manager_auth_proxy_patch.yaml
+&lt;span class="ln">27&lt;/span>│   │   └── manager_config_patch.yaml
+&lt;span class="ln">28&lt;/span>│   ├── manager
+&lt;span class="ln">29&lt;/span>│   │   ├── controller_manager_config.yaml
+&lt;span class="ln">30&lt;/span>│   │   ├── kustomization.yaml
+&lt;span class="ln">31&lt;/span>│   │   └── manager.yaml
+&lt;span class="ln">32&lt;/span>│   ├── manifests
+&lt;span class="ln">33&lt;/span>│   │   └── kustomization.yaml
+&lt;span class="ln">34&lt;/span>│   ├── prometheus
+&lt;span class="ln">35&lt;/span>│   │   ├── kustomization.yaml
+&lt;span class="ln">36&lt;/span>│   │   └── monitor.yaml
+&lt;span class="ln">37&lt;/span>│   ├── rbac
+&lt;span class="ln">38&lt;/span>│   │   ├── auth_proxy_client_clusterrole.yaml
+&lt;span class="ln">39&lt;/span>│   │   ├── auth_proxy_role.yaml
+&lt;span class="ln">40&lt;/span>│   │   ├── auth_proxy_role_binding.yaml
+&lt;span class="ln">41&lt;/span>│   │   ├── auth_proxy_service.yaml
+&lt;span class="ln">42&lt;/span>│   │   ├── kustomization.yaml
+&lt;span class="ln">43&lt;/span>│   │   ├── leader_election_role.yaml
+&lt;span class="ln">44&lt;/span>│   │   ├── leader_election_role_binding.yaml
+&lt;span class="ln">45&lt;/span>│   │   ├── memcached_editor_role.yaml
+&lt;span class="ln">46&lt;/span>│   │   ├── memcached_viewer_role.yaml
+&lt;span class="ln">47&lt;/span>│   │   ├── role_binding.yaml
+&lt;span class="ln">48&lt;/span>│   │   └── service_account.yaml
+&lt;span class="ln">49&lt;/span>│   ├── samples
+&lt;span class="ln">50&lt;/span>│   │   ├── cache_v1alpha1_memcached.yaml
+&lt;span class="ln">51&lt;/span>│   │   └── kustomization.yaml
+&lt;span class="ln">52&lt;/span>│   └── scorecard
+&lt;span class="ln">53&lt;/span>│   ├── bases
+&lt;span class="ln">54&lt;/span>│   │   └── config.yaml
+&lt;span class="ln">55&lt;/span>│   ├── kustomization.yaml
+&lt;span class="ln">56&lt;/span>│   └── patches
+&lt;span class="ln">57&lt;/span>│   ├── basic.config.yaml
+&lt;span class="ln">58&lt;/span>│   └── olm.config.yaml
+&lt;span class="ln">59&lt;/span>├── controllers
+&lt;span class="ln">60&lt;/span>│   ├── memcached_controller.go
+&lt;span class="ln">61&lt;/span>│   └── suite_test.go
+&lt;span class="ln">62&lt;/span>├── go.mod
+&lt;span class="ln">63&lt;/span>├── go.sum
+&lt;span class="ln">64&lt;/span>├── hack
+&lt;span class="ln">65&lt;/span>│   └── boilerplate.go.txt
+&lt;span class="ln">66&lt;/span>└── main.go
+&lt;span class="ln">67&lt;/span>
+&lt;span class="ln">68&lt;/span>&lt;span class="m">17&lt;/span> directories, &lt;span class="m">43&lt;/span> files
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>As you can see, more stuff have been generated for us -- that's exactly the value for such a tool to scaffold and generate boilerplate code for us to bootstrap a new operator project fast.&lt;/p>
+&lt;h3 id="coding-the-operator">Coding the operator&lt;/h3>
+&lt;p>Well, not really the focus for now.&lt;/p>
+&lt;p>But in order to judge whether it really works, let's log something out at least:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># Edit controllers/memcached_controller.go&lt;/span>
+&lt;span class="ln">2&lt;/span>$ vi controllers/memcached_controller.go
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Change this:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="ln">1&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">r&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">MemcachedReconciler&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nf">Reconcile&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">ctx&lt;/span> &lt;span class="nx">context&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Context&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">req&lt;/span> &lt;span class="nx">ctrl&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">ctrl&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Result&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">error&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="ln">2&lt;/span> &lt;span class="nx">_&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">r&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Log&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">WithValues&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;memcached&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">req&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">NamespacedName&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="ln">3&lt;/span>
+&lt;span class="ln">4&lt;/span> &lt;span class="c1">// your logic here
+&lt;/span>&lt;span class="ln">5&lt;/span>&lt;span class="c1">&lt;/span>
+&lt;span class="ln">6&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="nx">ctrl&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Result&lt;/span>&lt;span class="p">{},&lt;/span> &lt;span class="kc">nil&lt;/span>
+&lt;span class="ln">7&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>to:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="ln">1&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">r&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">MemcachedReconciler&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nf">Reconcile&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">ctx&lt;/span> &lt;span class="nx">context&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Context&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">req&lt;/span> &lt;span class="nx">ctrl&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">ctrl&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Result&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">error&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="ln">2&lt;/span> &lt;span class="nx">_&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">r&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Log&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">WithValues&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;memcached&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">req&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">NamespacedName&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="ln">3&lt;/span>
+&lt;span class="ln">4&lt;/span> &lt;span class="c1">// your logic here
+&lt;/span>&lt;span class="ln">5&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">r&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Log&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Info&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;great, the Reconcile is really triggered!&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="ln">6&lt;/span>
+&lt;span class="ln">7&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="nx">ctrl&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Result&lt;/span>&lt;span class="p">{},&lt;/span> &lt;span class="kc">nil&lt;/span>
+&lt;span class="ln">8&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>You may refer to &lt;a href="https://sdk.operatorframework.io/docs/building-operators/golang/tutorial/#implement-the-controller">this doc&lt;/a> and &lt;a href="https://github.com/operator-framework/operator-sdk/blob/v1.3.0/testdata/go/v3/memcached-operator/controllers/memcached_controller.go">this file&lt;/a> for how to implement the Controller in a step-by-step basis, with a complete sample implementation.&lt;/p>
+&lt;h3 id="optionally-creating-webhook">(Optionally) Creating webhook&lt;/h3>
+&lt;p>In the Kubernetes world, there are 3 kinds of webhooks:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#admission-webhooks">admission webhook&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://kubernetes.io/docs/reference/access-authn-authz/webhook/">authorization webhook&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definition-versioning/#webhook-conversion">CRD conversion webhook&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>Currently, &lt;code>controller-runtime&lt;/code> supports &lt;code>admission webhooks&lt;/code> and &lt;code>CRD conversion webhooks&lt;/code>, so does the Operator SDK.&lt;/p>
+&lt;p>The webhooks are optional but very powerful if they suit your needs. But let's ignore webhooks for now.&lt;/p>
+&lt;h3 id="running-the-operator-locally">Running the operator locally&lt;/h3>
+&lt;p>Even we've done nothing on coding the exact reconciliation logic, but guess what, the code generated is workable annd deployable.&lt;/p>
+&lt;p>Since we now focus on the end-to-end process, we can proceed.&lt;/p>
+&lt;p>Typically, we may want to run it outside of Kubernetes as a &amp;quot;normal&amp;quot; Golang project, to have a better development experience within the so-called &amp;quot;inner loop&amp;quot;:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># Firstly, we have to install the CRDs&lt;/span>
+&lt;span class="ln">2&lt;/span>$ make install
+&lt;span class="ln">3&lt;/span>
+&lt;span class="ln">4&lt;/span>&lt;span class="c1"># Then run it as a &amp;#34;normal&amp;#34; go project&lt;/span>
+&lt;span class="ln">5&lt;/span>$ make run
+&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>Note: if you check out the &lt;code>Makefile&lt;/code> you will realize that &lt;code>make run&lt;/code> is just to execute &lt;code>go run ./main.go&lt;/code>&lt;/p>
+&lt;/blockquote>
+&lt;p>Now the operator is actually working, watching the &amp;quot;Memcached&amp;quot; CRs in the default cluster we're now connected to, which is the cluster powered by &lt;code>kind&lt;/code>.&lt;/p>
+&lt;p>And we can open another console to create a CR to see what will happen:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Create a CR, which can refer to the example under config/samples/cache_v1alpha1_memcached.yaml&lt;/span>
+&lt;span class="ln"> 2&lt;/span>$ kubectl apply -f - &lt;span class="s">&amp;lt;&amp;lt;EOF
+&lt;/span>&lt;span class="ln"> 3&lt;/span>&lt;span class="s">apiVersion: cache.example.com/v1alpha1
+&lt;/span>&lt;span class="ln"> 4&lt;/span>&lt;span class="s">kind: Memcached
+&lt;/span>&lt;span class="ln"> 5&lt;/span>&lt;span class="s">metadata:
+&lt;/span>&lt;span class="ln"> 6&lt;/span>&lt;span class="s"> name: memcached-sample
+&lt;/span>&lt;span class="ln"> 7&lt;/span>&lt;span class="s">spec:
+&lt;/span>&lt;span class="ln"> 8&lt;/span>&lt;span class="s"> # Add fields here
+&lt;/span>&lt;span class="ln"> 9&lt;/span>&lt;span class="s"> foo: bar
+&lt;/span>&lt;span class="ln">10&lt;/span>&lt;span class="s">EOF&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>We should be able to see a log message like:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>2021-06-04T15:06:22.493Z INFO controllers.Memcached great, the Reconcile is really triggered!
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>As you can imagine, once you've implemented the reconciliation logic properly, this will work out for you.&lt;/p>
+&lt;p>Now let's delete the CR:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ kubectl delete Memcached/memcached-sample
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>We should be able to see the same log message again, indicating that the reconciliation logic can be triggered properly for you to handle the events.&lt;/p>
+&lt;h3 id="building-and-running-the-operator">Building and running the operator&lt;/h3>
+&lt;p>Let's pretend that we're happy with what we've developed, it's common to build and publish the operator as a container to a desired container repository like Docker Hub, or Quay.io, or something on prem. The choice is yours!&lt;/p>
+&lt;p>Here I'm going to push to my Docker Hub account, you may change it to yours.
+In this case, it's recommended to update the default &lt;code>Makefile&lt;/code> with below changes:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-diff" data-lang="diff">&lt;span class="ln">1&lt;/span>&lt;span class="gd">-IMG ?= controller:latest
+&lt;/span>&lt;span class="ln">2&lt;/span>&lt;span class="gd">&lt;/span>&lt;span class="gi">+IMG ?= $(IMAGE_TAG_BASE):v$(VERSION)
+&lt;/span>&lt;span class="ln">3&lt;/span>&lt;span class="gi">&lt;/span>
+&lt;span class="ln">4&lt;/span>&lt;span class="gd">-IMAGE_TAG_BASE ?= example.com/memcached-operator
+&lt;/span>&lt;span class="ln">5&lt;/span>&lt;span class="gd">&lt;/span>&lt;span class="gi">+IMAGE_TAG_BASE ?= brightzheng100/memcached-operator
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>So that we can avoid setting the &lt;code>IMG&lt;/code> in the commands all the times.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Docker build and push&lt;/span>
+&lt;span class="ln"> 2&lt;/span>&lt;span class="c1"># Instead of: make docker-build docker-push IMG=&amp;#34;brightzheng100/memcached-operator:0.0.1&amp;#34;&lt;/span>
+&lt;span class="ln"> 3&lt;/span>$ make docker-build docker-push
+&lt;span class="ln"> 4&lt;/span>
+&lt;span class="ln"> 5&lt;/span>&lt;span class="c1"># Then deploy it&lt;/span>
+&lt;span class="ln"> 6&lt;/span>&lt;span class="c1"># Instead of: make deploy IMG=&amp;#34;brightzheng100/memcached-operator:0.0.1&amp;#34;&lt;/span>
+&lt;span class="ln"> 7&lt;/span>$ make deploy
+&lt;span class="ln"> 8&lt;/span>
+&lt;span class="ln"> 9&lt;/span>&lt;span class="c1"># Check it out&lt;/span>
+&lt;span class="ln">10&lt;/span>$ kubectl get pods -n memcached-operator-system
+&lt;span class="ln">11&lt;/span>NAME READY STATUS RESTARTS AGE
+&lt;span class="ln">12&lt;/span>memcached-operator-controller-manager-7c759576bb-fwzfl 2/2 Running &lt;span class="m">0&lt;/span> 49s
+&lt;span class="ln">13&lt;/span>
+&lt;span class="ln">14&lt;/span>&lt;span class="c1"># Tail the logs&lt;/span>
+&lt;span class="ln">15&lt;/span>$ kubectl logs memcached-operator-controller-manager-7c759576bb-fwzfl --all-containers -f -n memcached-operator-system
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Similarlly, we can open a new console and create the CR to test it out:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Create a CR, which can refer to the example under /config/samples/cache_v1alpha1_memcached.yaml&lt;/span>
+&lt;span class="ln"> 2&lt;/span>$ kubectl apply -f - &lt;span class="s">&amp;lt;&amp;lt;EOF
+&lt;/span>&lt;span class="ln"> 3&lt;/span>&lt;span class="s">apiVersion: cache.example.com/v1alpha1
+&lt;/span>&lt;span class="ln"> 4&lt;/span>&lt;span class="s">kind: Memcached
+&lt;/span>&lt;span class="ln"> 5&lt;/span>&lt;span class="s">metadata:
+&lt;/span>&lt;span class="ln"> 6&lt;/span>&lt;span class="s"> name: memcached-sample
+&lt;/span>&lt;span class="ln"> 7&lt;/span>&lt;span class="s">spec:
+&lt;/span>&lt;span class="ln"> 8&lt;/span>&lt;span class="s"> # Add fields here
+&lt;/span>&lt;span class="ln"> 9&lt;/span>&lt;span class="s"> foo: bar
+&lt;/span>&lt;span class="ln">10&lt;/span>&lt;span class="s">EOF&lt;/span>
+&lt;span class="ln">11&lt;/span>
+&lt;span class="ln">12&lt;/span>&lt;span class="c1"># Check it out&lt;/span>
+&lt;span class="ln">13&lt;/span>$ kubectl get memcached
+&lt;span class="ln">14&lt;/span>NAME AGE
+&lt;span class="ln">15&lt;/span>memcached-sample 40s
+&lt;span class="ln">16&lt;/span>
+&lt;span class="ln">17&lt;/span>&lt;span class="c1"># Then delete it&lt;/span>
+&lt;span class="ln">18&lt;/span>$ kubectl delete Memcached/memcached-sample
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>And yes, we should be able to see exactly the log message twice, indicating that the &lt;code>Reconcile&lt;/code> method has been properly triggered twice for the corresponding CR events.&lt;/p>
+&lt;h3 id="clean-up">Clean Up&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ make undeploy
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>As you've seen, building Kubernetes operators can be significantly simplified because of the operator frameworks like &lt;code>Operator SDK&lt;/code>.&lt;/p>
+&lt;p>The project, the APIs, the webhooks can be generated by one command each so we can focus on implementing the operator's business logic.&lt;/p>
+&lt;p>Our software can be packaged and managed by our operators, which is super cool...but if we think of &amp;quot;who will monitor the monitors&amp;quot;: are there any further practices to package, distrubute, manage and operate our operators?&lt;/p>
+&lt;p>That's exactly my coming blog is going to cover. Stay tuned!&lt;/p></description></item></channel></rss>
