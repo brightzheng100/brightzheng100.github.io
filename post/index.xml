@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on The future is Bright</title><link>https://brightzheng100.github.io/post/</link><description>Recent content in Posts on The future is Bright</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2021 Bright Zheg. All Rights Reserved.</copyright><lastBuildDate>Sat, 05 Jun 2021 11:55:46 +0800</lastBuildDate><atom:link href="https://brightzheng100.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>Diving Deeper Into Operator Framwork, Part 1</title><link>https://brightzheng100.github.io/post/2021/06/diving-deeper-into-operator-framwork-part-1/</link><pubDate>Sat, 05 Jun 2021 11:55:46 +0800</pubDate><guid>https://brightzheng100.github.io/post/2021/06/diving-deeper-into-operator-framwork-part-1/</guid><description>
+&lt;p>When managing and operating complex software on Kubernetes, it's very common to think about the operator pattern which can simplify a lot of things for day 1 and day 2, from the SRE/Operator perspective, with the cost of coding.&lt;/p>
 &lt;style type="text/css">
 .twitter-tweet {
 font: 14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
@@ -16,7 +17,6 @@ text-decoration: underline;
 }
 &lt;/style>
 &lt;blockquote class="twitter-tweet">&lt;p lang="en" dir="ltr">Kubernetes is a platform for building platforms. It&amp;#39;s a better place to start; not the endgame.&lt;/p>&amp;mdash; Kelsey Hightower (@kelseyhightower) &lt;a href="https://twitter.com/kelseyhightower/status/935252923721793536?ref_src=twsrc%5Etfw">November 27, 2017&lt;/a>&lt;/blockquote>
-&lt;p>When managing and operating complex software on Kubernetes, it's very common to think about the operator pattern which can simplify a lot of things for day 1 and day 2, from the SRE/Operator perspective, with the cost of coding.&lt;/p>
 &lt;p>Believe it or not, there are a lot of boilerplate code that we need to spend time with, if you'd build Kubernetes operators from scratch.&lt;/p>
 &lt;p>Fortunately, there are a few great operator frameworks in the OSS Kubernetes community that can really help us out.&lt;/p>
 &lt;ul>
