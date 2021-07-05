@@ -121,7 +121,682 @@
 &lt;span class="ln">12&lt;/span>
 &lt;span class="ln">13&lt;/span>&lt;span class="c1"># Force push to origin/master&lt;/span>
 &lt;span class="ln">14&lt;/span>git push --force-with-lease origin master
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Diving Deeper Into Operator Framwork, Part 1</title><link>https://brightzheng100.github.io/post/2021/06/diving-deeper-into-operator-framwork-part-1/</link><pubDate>Sat, 05 Jun 2021 11:55:46 +0800</pubDate><guid>https://brightzheng100.github.io/post/2021/06/diving-deeper-into-operator-framwork-part-1/</guid><description>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Diving Deeper Into Operator Framework, Part 2</title><link>https://brightzheng100.github.io/post/2021/06/diving-deeper-into-operator-framework-part-2/</link><pubDate>Sun, 06 Jun 2021 11:55:46 +0800</pubDate><guid>https://brightzheng100.github.io/post/2021/06/diving-deeper-into-operator-framework-part-2/</guid><description>
+&lt;hr>
+&lt;p>This is the part 2 of my blog series about operator frameworks deep-dive.&lt;/p>
+&lt;p>In part 1, &lt;a href="https://brightzheng100.github.io/post/2021/06/diving-deeper-into-operator-framework-part1/">here&lt;/a>, I've walked you through a typical Kubernetes operator building process and it's time now to answer the
+question of &amp;quot;who will monitor the monitors&amp;quot;.&lt;/p>
+&lt;p>It's &lt;a href="https://olm.operatorframework.io/">&lt;code>Operator Lifecycle Manager (OLM)&lt;/code>&lt;/a>: The Operator Lifecycle Manager (OLM) extends Kubernetes to provide a declarative way to install, manage, and upgrade Operators on a cluster.&lt;/p>
+&lt;p>The OLM is a component of the &lt;a href="https://www.operatorframework.io/">Operator Framework&lt;/a>, an open source toolkit to manage Kubernetes native applications, called Operators, in a streamlined and scalable way.&lt;/p>
+&lt;h2 id="install-olm">Install OLM&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ operator-sdk olm install
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Within 2 minutes or so, the installation will be done.&lt;/p>
+&lt;p>Let's take a look what have been installed by this command through the logs:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln"> 1&lt;/span>INFO[0002] Fetching CRDs for version &amp;#34;latest&amp;#34;
+&lt;span class="ln"> 2&lt;/span>INFO[0002] Fetching resources for resolved version &amp;#34;latest&amp;#34;
+&lt;span class="ln"> 3&lt;/span>INFO[0012] Creating CRDs and resources
+&lt;span class="ln"> 4&lt;/span>INFO[0012] Creating CustomResourceDefinition &amp;#34;catalogsources.operators.coreos.com&amp;#34;
+&lt;span class="ln"> 5&lt;/span>INFO[0012] Creating CustomResourceDefinition &amp;#34;clusterserviceversions.operators.coreos.com&amp;#34;
+&lt;span class="ln"> 6&lt;/span>INFO[0012] Creating CustomResourceDefinition &amp;#34;installplans.operators.coreos.com&amp;#34;
+&lt;span class="ln"> 7&lt;/span>INFO[0012] Creating CustomResourceDefinition &amp;#34;operatorconditions.operators.coreos.com&amp;#34;
+&lt;span class="ln"> 8&lt;/span>INFO[0012] Creating CustomResourceDefinition &amp;#34;operatorgroups.operators.coreos.com&amp;#34;
+&lt;span class="ln"> 9&lt;/span>INFO[0012] Creating CustomResourceDefinition &amp;#34;operators.operators.coreos.com&amp;#34;
+&lt;span class="ln">10&lt;/span>INFO[0012] Creating CustomResourceDefinition &amp;#34;subscriptions.operators.coreos.com&amp;#34;
+&lt;span class="ln">11&lt;/span>INFO[0012] Creating Namespace &amp;#34;olm&amp;#34;
+&lt;span class="ln">12&lt;/span>INFO[0012] Creating Namespace &amp;#34;operators&amp;#34;
+&lt;span class="ln">13&lt;/span>INFO[0013] Creating ServiceAccount &amp;#34;olm/olm-operator-serviceaccount&amp;#34;
+&lt;span class="ln">14&lt;/span>INFO[0013] Creating ClusterRole &amp;#34;system:controller:operator-lifecycle-manager&amp;#34;
+&lt;span class="ln">15&lt;/span>INFO[0013] Creating ClusterRoleBinding &amp;#34;olm-operator-binding-olm&amp;#34;
+&lt;span class="ln">16&lt;/span>INFO[0013] Creating Deployment &amp;#34;olm/olm-operator&amp;#34;
+&lt;span class="ln">17&lt;/span>INFO[0013] Creating Deployment &amp;#34;olm/catalog-operator&amp;#34;
+&lt;span class="ln">18&lt;/span>INFO[0013] Creating ClusterRole &amp;#34;aggregate-olm-edit&amp;#34;
+&lt;span class="ln">19&lt;/span>INFO[0013] Creating ClusterRole &amp;#34;aggregate-olm-view&amp;#34;
+&lt;span class="ln">20&lt;/span>INFO[0013] Creating OperatorGroup &amp;#34;operators/global-operators&amp;#34;
+&lt;span class="ln">21&lt;/span>INFO[0016] Creating OperatorGroup &amp;#34;olm/olm-operators&amp;#34;
+&lt;span class="ln">22&lt;/span>INFO[0016] Creating ClusterServiceVersion &amp;#34;olm/packageserver&amp;#34;
+&lt;span class="ln">23&lt;/span>INFO[0017] Creating CatalogSource &amp;#34;olm/operatorhubio-catalog&amp;#34;
+&lt;span class="ln">24&lt;/span>INFO[0017] Waiting for deployment/olm-operator rollout to complete
+&lt;span class="ln">25&lt;/span>INFO[0017] Waiting for Deployment &amp;#34;olm/olm-operator&amp;#34; to rollout: 0 of 1 updated replicas are available
+&lt;span class="ln">26&lt;/span>INFO[0035] Deployment &amp;#34;olm/olm-operator&amp;#34; successfully rolled out
+&lt;span class="ln">27&lt;/span>INFO[0035] Waiting for deployment/catalog-operator rollout to complete
+&lt;span class="ln">28&lt;/span>INFO[0035] Deployment &amp;#34;olm/catalog-operator&amp;#34; successfully rolled out
+&lt;span class="ln">29&lt;/span>INFO[0035] Waiting for deployment/packageserver rollout to complete
+&lt;span class="ln">30&lt;/span>INFO[0035] Waiting for Deployment &amp;#34;olm/packageserver&amp;#34; to appear
+&lt;span class="ln">31&lt;/span>INFO[0037] Waiting for Deployment &amp;#34;olm/packageserver&amp;#34; to rollout: 0 of 2 updated replicas are available
+&lt;span class="ln">32&lt;/span>INFO[0052] Deployment &amp;#34;olm/packageserver&amp;#34; successfully rolled out
+&lt;span class="ln">33&lt;/span>INFO[0052] Successfully installed OLM version &amp;#34;latest&amp;#34;
+&lt;span class="ln">34&lt;/span>
+&lt;span class="ln">35&lt;/span>NAME NAMESPACE KIND STATUS
+&lt;span class="ln">36&lt;/span>catalogsources.operators.coreos.com CustomResourceDefinition Installed
+&lt;span class="ln">37&lt;/span>clusterserviceversions.operators.coreos.com CustomResourceDefinition Installed
+&lt;span class="ln">38&lt;/span>installplans.operators.coreos.com CustomResourceDefinition Installed
+&lt;span class="ln">39&lt;/span>operatorconditions.operators.coreos.com CustomResourceDefinition Installed
+&lt;span class="ln">40&lt;/span>operatorgroups.operators.coreos.com CustomResourceDefinition Installed
+&lt;span class="ln">41&lt;/span>operators.operators.coreos.com CustomResourceDefinition Installed
+&lt;span class="ln">42&lt;/span>subscriptions.operators.coreos.com CustomResourceDefinition Installed
+&lt;span class="ln">43&lt;/span>olm Namespace Installed
+&lt;span class="ln">44&lt;/span>operators Namespace Installed
+&lt;span class="ln">45&lt;/span>olm-operator-serviceaccount olm ServiceAccount Installed
+&lt;span class="ln">46&lt;/span>system:controller:operator-lifecycle-manager ClusterRole Installed
+&lt;span class="ln">47&lt;/span>olm-operator-binding-olm ClusterRoleBinding Installed
+&lt;span class="ln">48&lt;/span>olm-operator olm Deployment Installed
+&lt;span class="ln">49&lt;/span>catalog-operator olm Deployment Installed
+&lt;span class="ln">50&lt;/span>aggregate-olm-edit ClusterRole Installed
+&lt;span class="ln">51&lt;/span>aggregate-olm-view ClusterRole Installed
+&lt;span class="ln">52&lt;/span>global-operators operators OperatorGroup Installed
+&lt;span class="ln">53&lt;/span>olm-operators olm OperatorGroup Installed
+&lt;span class="ln">54&lt;/span>packageserver olm ClusterServiceVersion Installed
+&lt;span class="ln">55&lt;/span>operatorhubio-catalog olm CatalogSource Installed
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Well, that's a lot! So, firstly, let's understand the OLM resources.&lt;/p>
+&lt;h2 id="olm-resources">OLM resources&lt;/h2>
+&lt;p>The following custom resource definitions (CRDs) are defined and managed by Operator Lifecycle Manager (OLM).&lt;/p>
+&lt;p>I try to use plain English, instead of copy-pasting from official docs, to explain what they are and how they work together.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Resource&lt;/th>
+&lt;th>Short name&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>CatalogSource&lt;/td>
+&lt;td>catsrc&lt;/td>
+&lt;td>A repository of CSVs, CRDs, and packages that define an operator, or maybe a set of operators.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ClusterServiceVersion&lt;/td>
+&lt;td>csv&lt;/td>
+&lt;td>Operator metadata. For example: name, version, icon, required resources.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Subscription&lt;/td>
+&lt;td>sub&lt;/td>
+&lt;td>Calculated list of resources to be created to automatically install or upgrade a CSV.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>OperatorGroup&lt;/td>
+&lt;td>og&lt;/td>
+&lt;td>Defines where to watch for CRs: a namespace, multiple namespaces, or cluster-wide and binds to CSV through annotation of &lt;code>olm.operatorGroup&lt;/code>.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>OperatorConditions&lt;/td>
+&lt;td>N/A&lt;/td>
+&lt;td>Creates a communication channel between OLM and an Operator it manages. Operators can write to the Status.Conditions array to communicate complex states to OLM.&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>In the real world, the &lt;code>CatalogSource&lt;/code>, &lt;code>Subscription&lt;/code> and &lt;code>OperatorGroup&lt;/code> are the most important objects that we must understand.&lt;/p>
+&lt;h2 id="olm-status">OLM status&lt;/h2>
+&lt;p>&lt;code>operator-sdk&lt;/code> CLI provides a handy command to check the status of OLM:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>$ operator-sdk olm status
+&lt;span class="ln"> 2&lt;/span>INFO&lt;span class="o">[&lt;/span>0001&lt;span class="o">]&lt;/span> Fetching CRDs &lt;span class="k">for&lt;/span> version &lt;span class="s2">&amp;#34;0.18.1&amp;#34;&lt;/span>
+&lt;span class="ln"> 3&lt;/span>INFO&lt;span class="o">[&lt;/span>0001&lt;span class="o">]&lt;/span> Fetching resources &lt;span class="k">for&lt;/span> resolved version &lt;span class="s2">&amp;#34;v0.18.1&amp;#34;&lt;/span>
+&lt;span class="ln"> 4&lt;/span>INFO&lt;span class="o">[&lt;/span>0002&lt;span class="o">]&lt;/span> Successfully got OLM status &lt;span class="k">for&lt;/span> version &lt;span class="s2">&amp;#34;0.18.1&amp;#34;&lt;/span>
+&lt;span class="ln"> 5&lt;/span>
+&lt;span class="ln"> 6&lt;/span>NAME NAMESPACE KIND STATUS
+&lt;span class="ln"> 7&lt;/span>operators.operators.coreos.com CustomResourceDefinition Installed
+&lt;span class="ln"> 8&lt;/span>operatorgroups.operators.coreos.com CustomResourceDefinition Installed
+&lt;span class="ln"> 9&lt;/span>operatorconditions.operators.coreos.com CustomResourceDefinition Installed
+&lt;span class="ln">10&lt;/span>installplans.operators.coreos.com CustomResourceDefinition Installed
+&lt;span class="ln">11&lt;/span>clusterserviceversions.operators.coreos.com CustomResourceDefinition Installed
+&lt;span class="ln">12&lt;/span>olm-operator olm Deployment Installed
+&lt;span class="ln">13&lt;/span>olm-operator-binding-olm ClusterRoleBinding Installed
+&lt;span class="ln">14&lt;/span>operatorhubio-catalog olm CatalogSource Installed
+&lt;span class="ln">15&lt;/span>olm-operators olm OperatorGroup Installed
+&lt;span class="ln">16&lt;/span>aggregate-olm-view ClusterRole Installed
+&lt;span class="ln">17&lt;/span>catalog-operator olm Deployment Installed
+&lt;span class="ln">18&lt;/span>subscriptions.operators.coreos.com CustomResourceDefinition Installed
+&lt;span class="ln">19&lt;/span>aggregate-olm-edit ClusterRole Installed
+&lt;span class="ln">20&lt;/span>olm Namespace Installed
+&lt;span class="ln">21&lt;/span>global-operators operators OperatorGroup Installed
+&lt;span class="ln">22&lt;/span>operators Namespace Installed
+&lt;span class="ln">23&lt;/span>packageserver olm ClusterServiceVersion Installed
+&lt;span class="ln">24&lt;/span>olm-operator-serviceaccount olm ServiceAccount Installed
+&lt;span class="ln">25&lt;/span>catalogsources.operators.coreos.com CustomResourceDefinition Installed
+&lt;span class="ln">26&lt;/span>system:controller:operator-lifecycle-manager ClusterRole Installed
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="build-and-publish-the-bundle-image">Build and publish the bundle image&lt;/h2>
+&lt;p>Generate the bundle files, build and publish the bundle image:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># In part 1 we&amp;#39;ve already updated the Makefile to avoid specifying IMG&lt;/span>
+&lt;span class="ln">2&lt;/span>&lt;span class="c1"># make bundle IMG=&amp;#34;brightzheng100/memcached-operator:v0.0.1&amp;#34;&lt;/span>
+&lt;span class="ln">3&lt;/span>&lt;span class="c1"># make bundle-build bundle-push IMAGE_TAG_BASE=&amp;#34;brightzheng100/memcached-operator&amp;#34; VERSION=&amp;#34;0.0.1&amp;#34;&lt;/span>
+&lt;span class="ln">4&lt;/span>make bundle
+&lt;span class="ln">5&lt;/span>make bundle-build bundle-push
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Note: If you run &lt;code>make bundle&lt;/code> at first time, there are some questions prompted for your inputs, which are some of the metadata used to build the CSV:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln"> 1&lt;/span>Display name for the operator (required):
+&lt;span class="ln"> 2&lt;/span>&amp;gt; Memcached Operator
+&lt;span class="ln"> 3&lt;/span>
+&lt;span class="ln"> 4&lt;/span>Description for the operator (required):
+&lt;span class="ln"> 5&lt;/span>&amp;gt; Memcached Operator built by Bright for fun
+&lt;span class="ln"> 6&lt;/span>
+&lt;span class="ln"> 7&lt;/span>Provider&amp;#39;s name for the operator (required):
+&lt;span class="ln"> 8&lt;/span>&amp;gt; Bright Corp
+&lt;span class="ln"> 9&lt;/span>
+&lt;span class="ln">10&lt;/span>Any relevant URL for the provider name (optional):
+&lt;span class="ln">11&lt;/span>&amp;gt; https://brightzheng100.github.io
+&lt;span class="ln">12&lt;/span>
+&lt;span class="ln">13&lt;/span>Comma-separated list of keywords for your operator (required):
+&lt;span class="ln">14&lt;/span>&amp;gt; memcached,operator,kubernetes,operator-sdk
+&lt;span class="ln">15&lt;/span>
+&lt;span class="ln">16&lt;/span>Comma-separated list of maintainers and their emails (e.g. &amp;#39;name1:email1, name2:email2&amp;#39;) (required):
+&lt;span class="ln">17&lt;/span>&amp;gt; someemail AT someemail.com
+&lt;span class="ln">18&lt;/span>...
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>And a series of folders and files will be generated, which include:&lt;/p>
+&lt;ul>
+&lt;li>a new &lt;code>bundle&lt;/code> folder&lt;/li>
+&lt;li>a new &lt;code>bundle.Dockerfile&lt;/code> file&lt;/li>
+&lt;li>a new CSV file under &lt;code>config/mannifests/bases/&lt;/code> folder&lt;/li>
+&lt;/ul>
+&lt;p>And once we've done the &lt;code>bundle-build bundle-push&lt;/code>, the bundle image will be built and published.&lt;/p>
+&lt;h2 id="run-the-bundle">Run the bundle&lt;/h2>
+&lt;p>Run the bundle, to install the operator, with a specified namespace if you want:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ operator-sdk run bundle docker.io/brightzheng100/memcached-operator-bundle:v0.0.1 -n operators
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>And we should be able to see some logs like:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln"> 1&lt;/span>INFO[0017] Successfully created registry pod: docker-io-brightzheng100-memcached-operator-bundle-v0-0-1
+&lt;span class="ln"> 2&lt;/span>INFO[0018] Created CatalogSource: memcached-operator-catalog
+&lt;span class="ln"> 3&lt;/span>INFO[0018] OperatorGroup &amp;#34;operator-sdk-og&amp;#34; created
+&lt;span class="ln"> 4&lt;/span>INFO[0018] Created Subscription: memcached-operator-v0-0-1-sub
+&lt;span class="ln"> 5&lt;/span>INFO[0025] Approved InstallPlan install-j4476 for the Subscription: memcached-operator-v0-0-1-sub
+&lt;span class="ln"> 6&lt;/span>INFO[0025] Waiting for ClusterServiceVersion &amp;#34;default/memcached-operator.v0.0.1&amp;#34; to reach &amp;#39;Succeeded&amp;#39; phase
+&lt;span class="ln"> 7&lt;/span>INFO[0025] Waiting for ClusterServiceVersion &amp;#34;default/memcached-operator.v0.0.1&amp;#34; to appear
+&lt;span class="ln"> 8&lt;/span>INFO[0050] Found ClusterServiceVersion &amp;#34;default/memcached-operator.v0.0.1&amp;#34; phase: Pending
+&lt;span class="ln"> 9&lt;/span>INFO[0052] Found ClusterServiceVersion &amp;#34;default/memcached-operator.v0.0.1&amp;#34; phase: Installing
+&lt;span class="ln">10&lt;/span>INFO[0063] Found ClusterServiceVersion &amp;#34;default/memcached-operator.v0.0.1&amp;#34; phase: Succeeded
+&lt;span class="ln">11&lt;/span>INFO[0063] OLM has successfully installed &amp;#34;memcached-operator.v0.0.1&amp;#34;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>And objects are installed into specified namespace, here is &lt;code>operators&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Check out the pods&lt;/span>
+&lt;span class="ln"> 2&lt;/span>$ kubectl get pods -n operators
+&lt;span class="ln"> 3&lt;/span>NAME READY STATUS RESTARTS AGE
+&lt;span class="ln"> 4&lt;/span>c551e776de29960763c9167350ea816c5da7be5de6ff4def66c1e48acc6w8vn 0/1 Completed &lt;span class="m">0&lt;/span> 88s
+&lt;span class="ln"> 5&lt;/span>docker-io-brightzheng100-memcached-operator-bundle-v0-0-1 1/1 Running &lt;span class="m">0&lt;/span> 98s
+&lt;span class="ln"> 6&lt;/span>memcached-operator-controller-manager-77d65c8c67-rjvt7 2/2 Running &lt;span class="m">0&lt;/span> 76s
+&lt;span class="ln"> 7&lt;/span>
+&lt;span class="ln"> 8&lt;/span>&lt;span class="c1"># Check out all CRs created&lt;/span>
+&lt;span class="ln"> 9&lt;/span>$ kubectl get CatalogSource,ClusterServiceVersion,Subscription,OperatorGroup,OperatorConditions -n operators
+&lt;span class="ln">10&lt;/span>NAME DISPLAY TYPE PUBLISHER AGE
+&lt;span class="ln">11&lt;/span>catalogsource.operators.coreos.com/memcached-operator-catalog memcached-operator grpc operator-sdk 2m37s
+&lt;span class="ln">12&lt;/span>
+&lt;span class="ln">13&lt;/span>NAME DISPLAY VERSION REPLACES PHASE
+&lt;span class="ln">14&lt;/span>clusterserviceversion.operators.coreos.com/memcached-operator.v0.0.1 Memcached Operator 0.0.1 Succeeded
+&lt;span class="ln">15&lt;/span>
+&lt;span class="ln">16&lt;/span>NAME PACKAGE SOURCE CHANNEL
+&lt;span class="ln">17&lt;/span>subscription.operators.coreos.com/memcached-operator-v0-0-1-sub memcached-operator memcached-operator-catalog alpha
+&lt;span class="ln">18&lt;/span>
+&lt;span class="ln">19&lt;/span>NAME AGE
+&lt;span class="ln">20&lt;/span>operatorgroup.operators.coreos.com/global-operators 6d22h
+&lt;span class="ln">21&lt;/span>
+&lt;span class="ln">22&lt;/span>NAME AGE
+&lt;span class="ln">23&lt;/span>operatorcondition.operators.coreos.com/memcached-operator.v0.0.1 2m10s
+&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>Note:&lt;/p>
+&lt;ol>
+&lt;li>If your bundle image is hosted in a registry that is private and/or has a custom CA, &lt;a href="https://sdk.operatorframework.io/docs/olm-integration/cli-overview/#private-bundle-and-catalog-image-registries">these configuration steps&lt;/a> must be completed.&lt;/li>
+&lt;li>This must be the &lt;strong>bundle&lt;/strong> image instead of the &lt;strong>operator&lt;/strong> image, otherwise you would get errors like &lt;code>FATA[0012] Failed to run bundle: load bundle metadata: metadata not found in bundle-073235499&lt;/code>.&lt;/li>
+&lt;/ol>
+&lt;/blockquote>
+&lt;h2 id="create-the-cr">Create the CR&lt;/h2>
+&lt;p>Let's track the logs of the created operator pod:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>kubectl logs memcached-operator-controller-manager-77d65c8c67-rjvt7 -n operators -f --all-containers
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>And then create and delete the CR:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Create a CR, which can refer to the example under /config/samples/cache_v1alpha1_memcached.yaml&lt;/span>
+&lt;span class="ln"> 2&lt;/span>$ kubectl apply -f - &lt;span class="s">&amp;lt;&amp;lt;EOF
+&lt;/span>&lt;span class="ln"> 3&lt;/span>&lt;span class="s">apiVersion: cache.example.com/v1alpha1
+&lt;/span>&lt;span class="ln"> 4&lt;/span>&lt;span class="s">kind: Memcached
+&lt;/span>&lt;span class="ln"> 5&lt;/span>&lt;span class="s">metadata:
+&lt;/span>&lt;span class="ln"> 6&lt;/span>&lt;span class="s"> name: memcached-sample
+&lt;/span>&lt;span class="ln"> 7&lt;/span>&lt;span class="s">spec:
+&lt;/span>&lt;span class="ln"> 8&lt;/span>&lt;span class="s"> # Add fields here
+&lt;/span>&lt;span class="ln"> 9&lt;/span>&lt;span class="s"> foo: bar
+&lt;/span>&lt;span class="ln">10&lt;/span>&lt;span class="s">EOF&lt;/span>
+&lt;span class="ln">11&lt;/span>
+&lt;span class="ln">12&lt;/span>&lt;span class="c1"># Check it out&lt;/span>
+&lt;span class="ln">13&lt;/span>$ kubectl get Memcached
+&lt;span class="ln">14&lt;/span>NAME AGE
+&lt;span class="ln">15&lt;/span>memcached-sample 29s
+&lt;span class="ln">16&lt;/span>
+&lt;span class="ln">17&lt;/span>&lt;span class="c1"># Then delete it&lt;/span>
+&lt;span class="ln">18&lt;/span>$ kubectl delete Memcached/memcached-sample
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>We should be able to see exactly the same message twice, as the experiment we did in &lt;a href="https://brightzheng100.github.io/post/2021/06/diving-deeper-into-operator-framework-part1/">part 1&lt;/a>:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>2021-06-05T13:25:28.760Z INFO controllers.Memcached great, the Reconcile is really triggered!
+&lt;span class="ln">2&lt;/span>2021-06-05T13:26:18.726Z INFO controllers.Memcached great, the Reconcile is really triggered!
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>So you've seen that the operator works the same as the one we manually deployed.&lt;/p>
+&lt;h2 id="lets-dive-a-bit-deeper-with-what-we-have">Let's dive a bit deeper with what we have&lt;/h2>
+&lt;p>The operator has been installed into the purposely specified namespace &lt;code>operators&lt;/code>, which can be any namespace actually.&lt;/p>
+&lt;p>Now let's check out the yaml, which is a deployment:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ kubectl get deploy -n operators memcached-operator-controller-manager -o yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="ln"> 1&lt;/span>&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">apps/v1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 2&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Deployment&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 3&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 4&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">annotations&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 5&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">deployment.kubernetes.io/revision&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;1&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 6&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">creationTimestamp&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;2021-06-05T13:21:57Z&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 7&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">generation&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">2&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 8&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 9&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">olm.deployment-spec-hash&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">b95697767&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 10&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">olm.owner&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">memcached-operator.v0.0.1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 11&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">olm.owner.kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ClusterServiceVersion&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 12&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">olm.owner.namespace&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">operators&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 13&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">operators.coreos.com/memcached-operator.operators&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 14&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">manager&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">kube-controller-manager&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 15&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">operation&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Update&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 16&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">time&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;2021-06-05T13:28:35Z&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 17&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">memcached-operator-controller-manager&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 18&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">namespace&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">operators&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 19&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">ownerReferences&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 20&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">operators.coreos.com/v1alpha1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 21&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">blockOwnerDeletion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">false&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 22&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">controller&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">false&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 23&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ClusterServiceVersion&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 24&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">memcached-operator.v0.0.1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 25&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">uid&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">05d41d88-8886-4ede-b2cc-8fd43f72259d&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 26&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resourceVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;469189&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 27&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">uid&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">9bfef7a8-ac72-4a6d-833b-0d4a436b5a74&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 28&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 29&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">progressDeadlineSeconds&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">600&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 30&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">replicas&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 31&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">revisionHistoryLimit&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 32&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">selector&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 33&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">matchLabels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 34&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">control-plane&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">controller-manager&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 35&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">strategy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 36&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">rollingUpdate&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 37&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">maxSurge&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">25&lt;/span>&lt;span class="l">%&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 38&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">maxUnavailable&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">25&lt;/span>&lt;span class="l">%&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 39&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">RollingUpdate&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 40&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">template&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 41&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 42&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">annotations&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 43&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">alm-examples&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">|-&lt;/span>&lt;span class="sd">
+&lt;/span>&lt;span class="ln"> 44&lt;/span>&lt;span class="sd"> [
+&lt;/span>&lt;span class="ln"> 45&lt;/span>&lt;span class="sd"> {
+&lt;/span>&lt;span class="ln"> 46&lt;/span>&lt;span class="sd"> &amp;#34;apiVersion&amp;#34;: &amp;#34;cache.example.com/v1alpha1&amp;#34;,
+&lt;/span>&lt;span class="ln"> 47&lt;/span>&lt;span class="sd"> &amp;#34;kind&amp;#34;: &amp;#34;Memcached&amp;#34;,
+&lt;/span>&lt;span class="ln"> 48&lt;/span>&lt;span class="sd"> &amp;#34;metadata&amp;#34;: {
+&lt;/span>&lt;span class="ln"> 49&lt;/span>&lt;span class="sd"> &amp;#34;name&amp;#34;: &amp;#34;memcached-sample&amp;#34;
+&lt;/span>&lt;span class="ln"> 50&lt;/span>&lt;span class="sd"> },
+&lt;/span>&lt;span class="ln"> 51&lt;/span>&lt;span class="sd"> &amp;#34;spec&amp;#34;: {
+&lt;/span>&lt;span class="ln"> 52&lt;/span>&lt;span class="sd"> &amp;#34;foo&amp;#34;: &amp;#34;bar&amp;#34;
+&lt;/span>&lt;span class="ln"> 53&lt;/span>&lt;span class="sd"> }
+&lt;/span>&lt;span class="ln"> 54&lt;/span>&lt;span class="sd"> }
+&lt;/span>&lt;span class="ln"> 55&lt;/span>&lt;span class="sd"> ]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 56&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">capabilities&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Basic Install&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 57&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">olm.operatorGroup&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">global-operators&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 58&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">olm.operatorNamespace&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">operators&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 59&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">olm.targetNamespaces&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 60&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">operatorframework.io/properties&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;{&amp;#34;properties&amp;#34;:[{&amp;#34;type&amp;#34;:&amp;#34;olm.gvk&amp;#34;,&amp;#34;value&amp;#34;:{&amp;#34;group&amp;#34;:&amp;#34;cache.example.com&amp;#34;,&amp;#34;kind&amp;#34;:&amp;#34;Memcached&amp;#34;,&amp;#34;version&amp;#34;:&amp;#34;v1alpha1&amp;#34;}},{&amp;#34;type&amp;#34;:&amp;#34;olm.package&amp;#34;,&amp;#34;value&amp;#34;:{&amp;#34;packageName&amp;#34;:&amp;#34;memcached-operator&amp;#34;,&amp;#34;version&amp;#34;:&amp;#34;0.0.1&amp;#34;}}]}&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 61&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">operators.operatorframework.io/builder&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">operator-sdk-v1.7.1+git&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 62&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">operators.operatorframework.io/project_layout&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">go.kubebuilder.io/v3&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 63&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">creationTimestamp&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">null&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 64&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 65&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">control-plane&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">controller-manager&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 66&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">spec&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 67&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">containers&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 68&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">args&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 69&lt;/span>&lt;span class="w"> &lt;/span>- --&lt;span class="l">secure-listen-address=0.0.0.0:8443&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 70&lt;/span>&lt;span class="w"> &lt;/span>- --&lt;span class="l">upstream=http://127.0.0.1:8080/&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 71&lt;/span>&lt;span class="w"> &lt;/span>- --&lt;span class="l">logtostderr=true&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 72&lt;/span>&lt;span class="w"> &lt;/span>- --&lt;span class="l">v=10&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 73&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">env&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 74&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">OPERATOR_CONDITION_NAME&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 75&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">value&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">memcached-operator.v0.0.1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 76&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">gcr.io/kubebuilder/kube-rbac-proxy:v0.8.0&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 77&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">imagePullPolicy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">IfNotPresent&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 78&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">kube-rbac-proxy&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 79&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">ports&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 80&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">containerPort&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">8443&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 81&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 82&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">protocol&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">TCP&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 83&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resources&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>{}&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 84&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">terminationMessagePath&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">/dev/termination-log&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 85&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">terminationMessagePolicy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">File&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 86&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">args&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 87&lt;/span>&lt;span class="w"> &lt;/span>- --&lt;span class="l">health-probe-bind-address=:8081&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 88&lt;/span>&lt;span class="w"> &lt;/span>- --&lt;span class="l">metrics-bind-address=127.0.0.1:8080&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 89&lt;/span>&lt;span class="w"> &lt;/span>- --&lt;span class="l">leader-elect&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 90&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">command&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 91&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="l">/manager&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 92&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">env&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 93&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">OPERATOR_CONDITION_NAME&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 94&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">value&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">memcached-operator.v0.0.1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 95&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">brightzheng100/memcached-operator:v0.0.1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 96&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">imagePullPolicy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">IfNotPresent&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 97&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">livenessProbe&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 98&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">failureThreshold&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">3&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln"> 99&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">httpGet&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">100&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">path&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">/healthz&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">101&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">port&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">8081&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">102&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">scheme&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">HTTP&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">103&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">initialDelaySeconds&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">15&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">104&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">periodSeconds&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">20&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">105&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">successThreshold&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">106&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">timeoutSeconds&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">107&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">manager&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">108&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">readinessProbe&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">109&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">failureThreshold&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">3&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">110&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">httpGet&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">111&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">path&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">/readyz&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">112&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">port&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">8081&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">113&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">scheme&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">HTTP&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">114&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">initialDelaySeconds&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">5&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">115&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">periodSeconds&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">10&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">116&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">successThreshold&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">117&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">timeoutSeconds&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">118&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">resources&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">119&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">limits&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">120&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">cpu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">100m&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">121&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">memory&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">30Mi&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">122&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">requests&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">123&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">cpu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">100m&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">124&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">memory&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">20Mi&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">125&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">securityContext&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">126&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">allowPrivilegeEscalation&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">false&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">127&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">terminationMessagePath&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">/dev/termination-log&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">128&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">terminationMessagePolicy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">File&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">129&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">dnsPolicy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ClusterFirst&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">130&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">restartPolicy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Always&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">131&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">schedulerName&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">default-scheduler&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">132&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">securityContext&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">133&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">runAsNonRoot&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">134&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">serviceAccount&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">memcached-operator-controller-manager&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">135&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">serviceAccountName&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">memcached-operator-controller-manager&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">136&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">terminationGracePeriodSeconds&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Two interesting findings:&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>There is a sidecar container named &lt;code>kube-rbac-proxy&lt;/code> with image of &lt;code>gcr.io/kubebuilder/kube-rbac-proxy:v0.8.0&lt;/code>;&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>From the &lt;code>ownerReferences&lt;/code> section we know that the operator's parent is &lt;code>ClusterServiceVersion/memcached-operator.v0.0.1&lt;/code>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>There are no good docs in offical &lt;a href="https://sdk.operatorframework.io/docs/">docs&lt;/a>.&lt;/p>
+&lt;p>Actuall it derives from this &lt;a href="https://github.com/brancz/kube-rbac-proxy">repo&lt;/a> and is hosted by the Kubebuilder team in GCR. The main goal of having this container injected as a sidecar is to be a small HTTP proxy that can perform RBAC authorization against the Kubernetes API using SubjectAccessReview to protect the operator behind.&lt;/p>
+&lt;p>The schema of &lt;code>ClusterServiceVersion/memcached-operator.v0.0.1&lt;/code> can be found in file &lt;code>bundle/manifests/memcached-operator.clusterserviceversion.yaml&lt;/code> and you might find this in the YAML file:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="ln">1&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">installModes&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">2&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">supported&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">false&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">3&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">OwnNamespace&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">4&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">supported&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">false&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">5&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">SingleNamespace&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">6&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">supported&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">false&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">7&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">MultiNamespace&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">8&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">supported&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="ln">9&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">AllNamespaces&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>So by default, the CSV generated by Operator SDK supports the operator to monitor &lt;code>AllNamespaces&lt;/code> for the CR, which is &lt;code>Memcached&lt;/code> in our case -- that's why we just created our CR in the &lt;code>default&lt;/code> namespace and it still worked fine.&lt;/p>
+&lt;h2 id="how-about-upgrade">How about upgrade?&lt;/h2>
+&lt;p>Since it's named &lt;code>Operator Lifecycle Manager&lt;/code>, let's see how it handles operator upgrades.&lt;/p>
+&lt;h3 id="make-more-changes-in-our-operator-code">Make more changes in our operator code&lt;/h3>
+&lt;p>Remember the &amp;quot;huge&amp;quot; change we made in part 1 for our operator, we will make even bigger change:)&lt;/p>
+&lt;p>In &lt;code>controllers/memcached_controller.go&lt;/code>, from:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="ln">1&lt;/span>&lt;span class="nx">r&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Log&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Info&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;great, the Reconcile is really triggered!&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>To:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="ln">1&lt;/span>&lt;span class="nx">r&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Log&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Info&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;great, the Reconcile is really triggered in v2!&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="build-and-publish-the-operator-image">Build and publish the operator image&lt;/h3>
+&lt;p>As usual, let's build the publish the image. But this time we're going to specify the version:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># Docker build and push with a specified VERSION to replace the default 0.0.1&lt;/span>
+&lt;span class="ln">2&lt;/span>$ make docker-build docker-push &lt;span class="nv">VERSION&lt;/span>&lt;span class="o">=&lt;/span>0.0.2
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="build-and-publish-the-operator-bundle-image">Build and publish the operator bundle image&lt;/h3>
+&lt;p>Now we can refresh the bundle with the new version, and then push the build and push the bundle image to publish:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># Bundle it with specified VERSION too, this will update the CSV file&lt;/span>
+&lt;span class="ln">2&lt;/span>$ make bundle &lt;span class="nv">VERSION&lt;/span>&lt;span class="o">=&lt;/span>0.0.2
+&lt;span class="ln">3&lt;/span>
+&lt;span class="ln">4&lt;/span>&lt;span class="c1"># Then build and push the bundle image&lt;/span>
+&lt;span class="ln">5&lt;/span>$ make bundle-build bundle-push &lt;span class="nv">VERSION&lt;/span>&lt;span class="o">=&lt;/span>0.0.2
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>We even can check the locally cached Docker images:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ docker images &lt;span class="p">|&lt;/span> grep memcached
+&lt;span class="ln">2&lt;/span>brightzheng100/memcached-operator-bundle v0.0.2 dc0a255ecff9 &lt;span class="m">19&lt;/span> seconds ago 10.1kB
+&lt;span class="ln">3&lt;/span>brightzheng100/memcached-operator v0.0.2 b3e76e7f5f78 &lt;span class="m">6&lt;/span> minutes ago 47.4MB
+&lt;span class="ln">4&lt;/span>...
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="upgrade-the-operator-by-upgrading-the-bundle">Upgrade the operator by upgrading the bundle&lt;/h3>
+&lt;p>Finally, let's upgrade the bundle:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>$ operator-sdk run bundle-upgrade docker.io/brightzheng100/memcached-operator-bundle:v0.0.2 -n operators
+&lt;span class="ln"> 2&lt;/span>INFO&lt;span class="o">[&lt;/span>0005&lt;span class="o">]&lt;/span> Found existing subscription with name memcached-operator-v0-0-1-sub and namespace operators
+&lt;span class="ln"> 3&lt;/span>INFO&lt;span class="o">[&lt;/span>0005&lt;span class="o">]&lt;/span> Found existing catalog &lt;span class="nb">source&lt;/span> with name memcached-operator-catalog and namespace operators
+&lt;span class="ln"> 4&lt;/span>INFO&lt;span class="o">[&lt;/span>0013&lt;span class="o">]&lt;/span> Successfully created registry pod: docker-io-brightzheng100-memcached-operator-bundle-v0-0-2
+&lt;span class="ln"> 5&lt;/span>INFO&lt;span class="o">[&lt;/span>0013&lt;span class="o">]&lt;/span> Updated catalog &lt;span class="nb">source&lt;/span> memcached-operator-catalog with address and annotations
+&lt;span class="ln"> 6&lt;/span>INFO&lt;span class="o">[&lt;/span>0013&lt;span class="o">]&lt;/span> Deleted previous registry pod with name &lt;span class="s2">&amp;#34;docker-io-brightzheng100-memcached-operator-bundle-v0-0-1&amp;#34;&lt;/span>
+&lt;span class="ln"> 7&lt;/span>INFO&lt;span class="o">[&lt;/span>0047&lt;span class="o">]&lt;/span> Approved InstallPlan install-jgbx7 &lt;span class="k">for&lt;/span> the Subscription: memcached-operator-v0-0-1-sub
+&lt;span class="ln"> 8&lt;/span>INFO&lt;span class="o">[&lt;/span>0047&lt;span class="o">]&lt;/span> Waiting &lt;span class="k">for&lt;/span> ClusterServiceVersion &lt;span class="s2">&amp;#34;operators/memcached-operator.v0.0.2&amp;#34;&lt;/span> to reach &lt;span class="s1">&amp;#39;Succeeded&amp;#39;&lt;/span> phase
+&lt;span class="ln"> 9&lt;/span>INFO&lt;span class="o">[&lt;/span>0047&lt;span class="o">]&lt;/span> Waiting &lt;span class="k">for&lt;/span> ClusterServiceVersion &lt;span class="s2">&amp;#34;operators/memcached-operator.v0.0.2&amp;#34;&lt;/span> to appear
+&lt;span class="ln">10&lt;/span>INFO&lt;span class="o">[&lt;/span>0048&lt;span class="o">]&lt;/span> Found ClusterServiceVersion &lt;span class="s2">&amp;#34;operators/memcached-operator.v0.0.2&amp;#34;&lt;/span> phase: Installing
+&lt;span class="ln">11&lt;/span>INFO&lt;span class="o">[&lt;/span>0059&lt;span class="o">]&lt;/span> Found ClusterServiceVersion &lt;span class="s2">&amp;#34;operators/memcached-operator.v0.0.2&amp;#34;&lt;/span> phase: Succeeded
+&lt;span class="ln">12&lt;/span>INFO&lt;span class="o">[&lt;/span>0059&lt;span class="o">]&lt;/span> Successfully upgraded to &lt;span class="s2">&amp;#34;memcached-operator.v0.0.2&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you trace carefully for the upgrade process, you will find that it's quite similar to a blue-green deployment process:&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>It downloads the desired version of bundle image and terminates the old bundle;&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>A job starts to prepare and eventually starts a pod serving as &lt;code>operator registry&lt;/code>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ kubectl logs -n operators docker-io-brightzheng100-memcached-operator-bundle-v0-0-2
+&lt;span class="ln">2&lt;/span>...
+&lt;span class="ln">3&lt;/span>&lt;span class="nv">time&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;2021-06-06T08:20:04Z&amp;#34;&lt;/span> &lt;span class="nv">level&lt;/span>&lt;span class="o">=&lt;/span>info &lt;span class="nv">msg&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;Keeping server open for infinite seconds&amp;#34;&lt;/span> &lt;span class="nv">database&lt;/span>&lt;span class="o">=&lt;/span>/database/index.db &lt;span class="nv">port&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">50051&lt;/span>
+&lt;span class="ln">4&lt;/span>&lt;span class="nv">time&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;2021-06-06T08:20:04Z&amp;#34;&lt;/span> &lt;span class="nv">level&lt;/span>&lt;span class="o">=&lt;/span>info &lt;span class="nv">msg&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;serving registry&amp;#34;&lt;/span> &lt;span class="nv">database&lt;/span>&lt;span class="o">=&lt;/span>/database/index.db &lt;span class="nv">port&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">50051&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
+&lt;li>A new operator with new version is provisioned and the old operator is terminated.&lt;/li>
+&lt;/ol>
+&lt;h2 id="but-wait-what-is-the-operator-bundle-and-why-bundle-image">But wait, what is the operator bundle and why bundle image?&lt;/h2>
+&lt;p>Even you may have followed the steps to this far, you might still be curious or even confused: what is the bundle and why?&lt;/p>
+&lt;p>In Operator Framework world, a &lt;strong>&amp;quot;bundle&amp;quot;&lt;/strong> is meant to represent a specific version of an operator with a structured directory of files with one &lt;code>ClusterServiceVersion&lt;/code>.&lt;/p>
+&lt;p>According to the docs &lt;a href="https://github.com/operator-framework/operator-registry#manifest-format">here&lt;/a>: A bundle typically includes a ClusterServiceVersion and the CRDs that define the owned APIs of the CSV in its manifest directory, though additional objects may be included. It also includes an annotation file in its metadata folder which defines some higher level aggregate data that helps to describe the format and package information about how the bundle should be added into an index of bundles.&lt;/p>
+&lt;p>In our case the folder structure is like:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>$ tree bundle
+&lt;span class="ln"> 2&lt;/span>bundle
+&lt;span class="ln"> 3&lt;/span>├── manifests
+&lt;span class="ln"> 4&lt;/span>│   ├── cache.example.com_memcacheds.yaml
+&lt;span class="ln"> 5&lt;/span>│   ├── memcached-operator-controller-manager-metrics-service_v1_service.yaml
+&lt;span class="ln"> 6&lt;/span>│   ├── memcached-operator-controller-manager_v1_serviceaccount.yaml
+&lt;span class="ln"> 7&lt;/span>│   ├── memcached-operator-manager-config_v1_configmap.yaml
+&lt;span class="ln"> 8&lt;/span>│   ├── memcached-operator-metrics-reader_rbac.authorization.k8s.io_v1_clusterrole.yaml
+&lt;span class="ln"> 9&lt;/span>│   └── memcached-operator.clusterserviceversion.yaml
+&lt;span class="ln">10&lt;/span>├── metadata
+&lt;span class="ln">11&lt;/span>│   └── annotations.yaml
+&lt;span class="ln">12&lt;/span>└── tests
+&lt;span class="ln">13&lt;/span> └── scorecard
+&lt;span class="ln">14&lt;/span> └── config.yaml
+&lt;span class="ln">15&lt;/span>
+&lt;span class="ln">16&lt;/span>&lt;span class="m">4&lt;/span> directories, &lt;span class="m">8&lt;/span> files
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>And obviously, bundle image is a &lt;strong>way&lt;/strong> using OCI spec container image as a method of storing the manifest and metadata contents of individual operator bundles.&lt;/p>
+&lt;p>So if you recall the pods we have within our &lt;code>operators&lt;/code> namespace:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ kubectl get pod -n operators
+&lt;span class="ln">2&lt;/span>NAME READY STATUS RESTARTS AGE
+&lt;span class="ln">3&lt;/span>a861f25fcb3303cc6d11282fb2ecc2e886f24ff6142bb7511df62ea0caw7v7t 0/1 Completed &lt;span class="m">0&lt;/span> 71m
+&lt;span class="ln">4&lt;/span>c551e776de29960763c9167350ea816c5da7be5de6ff4def66c1e48acc427qv 0/1 Completed &lt;span class="m">0&lt;/span> 74m
+&lt;span class="ln">5&lt;/span>docker-io-brightzheng100-memcached-operator-bundle-v0-0-2 1/1 Running &lt;span class="m">0&lt;/span> 71m
+&lt;span class="ln">6&lt;/span>memcached-operator-controller-manager-5f7468f5cc-rnf2b 2/2 Running &lt;span class="m">0&lt;/span> 70m
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>You will realize that the pod of &lt;code>docker-io-brightzheng100-memcached-operator-bundle-v0-0-2&lt;/code> is serving as a &lt;code>gRPC&lt;/code> source for OLM to discover the operators by an object with the type of &lt;code>CatalogSource&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Let&amp;#39;s see what CatalogSource objects we have&lt;/span>
+&lt;span class="ln"> 2&lt;/span>$ kubectl get CatalogSource -n operators
+&lt;span class="ln"> 3&lt;/span>NAME DISPLAY TYPE PUBLISHER AGE
+&lt;span class="ln"> 4&lt;/span>memcached-operator-catalog memcached-operator grpc operator-sdk 77m
+&lt;span class="ln"> 5&lt;/span>
+&lt;span class="ln"> 6&lt;/span>&lt;span class="c1"># How this CatalogSource looks like&lt;/span>
+&lt;span class="ln"> 7&lt;/span>$ kubectl get CatalogSource/memcached-operator-catalog -n operators -o yaml
+&lt;span class="ln"> 8&lt;/span>apiVersion: operators.coreos.com/v1alpha1
+&lt;span class="ln"> 9&lt;/span>kind: CatalogSource
+&lt;span class="ln">10&lt;/span>metadata:
+&lt;span class="ln">11&lt;/span> &amp;lt;OMITTED&amp;gt;
+&lt;span class="ln">12&lt;/span> name: memcached-operator-catalog
+&lt;span class="ln">13&lt;/span> namespace: operators
+&lt;span class="ln">14&lt;/span>spec:
+&lt;span class="ln">15&lt;/span> address: 10.244.1.18:50051
+&lt;span class="ln">16&lt;/span> displayName: memcached-operator
+&lt;span class="ln">17&lt;/span> icon:
+&lt;span class="ln">18&lt;/span> base64data: &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>
+&lt;span class="ln">19&lt;/span> mediatype: &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>
+&lt;span class="ln">20&lt;/span> publisher: operator-sdk
+&lt;span class="ln">21&lt;/span> secrets:
+&lt;span class="ln">22&lt;/span> - &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>
+&lt;span class="ln">23&lt;/span> sourceType: grpc
+&lt;span class="ln">24&lt;/span>status:
+&lt;span class="ln">25&lt;/span> connectionState:
+&lt;span class="ln">26&lt;/span> address: 10.244.1.18:50051
+&lt;span class="ln">27&lt;/span> lastConnect: &lt;span class="s2">&amp;#34;2021-06-06T08:20:08Z&amp;#34;&lt;/span>
+&lt;span class="ln">28&lt;/span> lastObservedState: READY
+&lt;span class="ln">29&lt;/span> registryService:
+&lt;span class="ln">30&lt;/span> createdAt: &lt;span class="s2">&amp;#34;2021-06-06T08:16:47Z&amp;#34;&lt;/span>
+&lt;span class="ln">31&lt;/span> protocol: grpc
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>See this &lt;code>address: 10.244.1.18:50051&lt;/code>, which is being served exactly by the pod of &lt;code>docker-io-brightzheng100-memcached-operator-bundle-v0-0-2&lt;/code>, as the &lt;strong>operator registry&lt;/strong>.&lt;/p>
+&lt;p>There must be a &lt;code>subscription&lt;/code> too, to subscribe for the desired operator, and here it is:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Yes, there is a subscription&lt;/span>
+&lt;span class="ln"> 2&lt;/span>$ kubectl get subscription -n operators
+&lt;span class="ln"> 3&lt;/span>NAME PACKAGE SOURCE CHANNEL
+&lt;span class="ln"> 4&lt;/span>memcached-operator-v0-0-1-sub memcached-operator memcached-operator-catalog alpha
+&lt;span class="ln"> 5&lt;/span>
+&lt;span class="ln"> 6&lt;/span>&lt;span class="c1"># And the content is like this&lt;/span>
+&lt;span class="ln"> 7&lt;/span>$ kg subscription/memcached-operator-v0-0-1-sub -n operators -o yaml
+&lt;span class="ln"> 8&lt;/span>apiVersion: operators.coreos.com/v1alpha1
+&lt;span class="ln"> 9&lt;/span>kind: Subscription
+&lt;span class="ln">10&lt;/span>metadata:
+&lt;span class="ln">11&lt;/span> name: memcached-operator-v0-0-1-sub
+&lt;span class="ln">12&lt;/span> namespace: operators
+&lt;span class="ln">13&lt;/span>spec:
+&lt;span class="ln">14&lt;/span> channel: alpha
+&lt;span class="ln">15&lt;/span> installPlanApproval: Manual
+&lt;span class="ln">16&lt;/span> name: memcached-operator
+&lt;span class="ln">17&lt;/span> source: memcached-operator-catalog
+&lt;span class="ln">18&lt;/span> sourceNamespace: operators
+&lt;span class="ln">19&lt;/span> startingCSV: memcached-operator.v0.0.1
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now things are very clear:&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Using the bundle here is to set up an &lt;strong>operator registry&lt;/strong> source for OLM to discover our operators -- this is more from a development lifecycle perspective;&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>In the real world, it's more likely we're refering to a well-known registry, like &lt;a href="https://operatorhub.io/">OperatorHub.io&lt;/a>. In this case, what we need to do, in most of the cases, is to define the &lt;code>CatalogSource&lt;/code> and &lt;code>Subscription&lt;/code> objects.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="lets-further-prove-it-by-using-the-etcd-operator-published-in-operatorhubio">Let's further prove it by using the &lt;code>etcd&lt;/code> operator published in OperatorHub.io&lt;/h2>
+&lt;p>If we check carefully you would have found that there is already a &lt;code>CatalogSource&lt;/code> with curated community operators pre-installed:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Check out the catalogsource in olm&lt;/span>
+&lt;span class="ln"> 2&lt;/span>$ kubectl get catalogsource -n olm
+&lt;span class="ln"> 3&lt;/span>NAME DISPLAY TYPE PUBLISHER AGE
+&lt;span class="ln"> 4&lt;/span>operatorhubio-catalog Community Operators grpc OperatorHub.io 7d19h
+&lt;span class="ln"> 5&lt;/span>
+&lt;span class="ln"> 6&lt;/span>&lt;span class="c1"># See the content&lt;/span>
+&lt;span class="ln"> 7&lt;/span>$ kubectl get catalogsource/operatorhubio-catalog -n olm -o yaml
+&lt;span class="ln"> 8&lt;/span>apiVersion: operators.coreos.com/v1alpha1
+&lt;span class="ln"> 9&lt;/span>kind: CatalogSource
+&lt;span class="ln">10&lt;/span>metadata:
+&lt;span class="ln">11&lt;/span> name: operatorhubio-catalog
+&lt;span class="ln">12&lt;/span> namespace: olm
+&lt;span class="ln">13&lt;/span>spec:
+&lt;span class="ln">14&lt;/span> displayName: Community Operators
+&lt;span class="ln">15&lt;/span> image: quay.io/operatorhubio/catalog:latest
+&lt;span class="ln">16&lt;/span> publisher: OperatorHub.io
+&lt;span class="ln">17&lt;/span> sourceType: grpc
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now let's pick the &lt;code>etcd&lt;/code> operator, which is published in &lt;a href="https://operatorhub.io/">OperatorHub.io&lt;/a>, as example to walk through the operator UX from a &lt;strong>service provider&lt;/strong> standpoint.&lt;/p>
+&lt;blockquote>
+&lt;p>Note: Hey, you may refer to &lt;a href="https://operatorhub.io/operator/etcd">here&lt;/a> for this operator details.&lt;/p>
+&lt;/blockquote>
+&lt;p>We will use a &amp;quot;raw&amp;quot; way to walk it through to see how it works with OLM.&lt;/p>
+&lt;ol>
+&lt;li>Install the &lt;code>etcd&lt;/code> operator by subscribing to the &lt;code>operatorhubio-catalog&lt;/code> &lt;code>CatalogSource&lt;/code>:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Install the etcd operator&lt;/span>
+&lt;span class="ln"> 2&lt;/span>kubectl apply -f - &lt;span class="s">&amp;lt;&amp;lt;EOF
+&lt;/span>&lt;span class="ln"> 3&lt;/span>&lt;span class="s">---
+&lt;/span>&lt;span class="ln"> 4&lt;/span>&lt;span class="s">apiVersion: v1
+&lt;/span>&lt;span class="ln"> 5&lt;/span>&lt;span class="s">kind: Namespace
+&lt;/span>&lt;span class="ln"> 6&lt;/span>&lt;span class="s">metadata:
+&lt;/span>&lt;span class="ln"> 7&lt;/span>&lt;span class="s"> name: my-etcd
+&lt;/span>&lt;span class="ln"> 8&lt;/span>&lt;span class="s">---
+&lt;/span>&lt;span class="ln"> 9&lt;/span>&lt;span class="s">apiVersion: operators.coreos.com/v1
+&lt;/span>&lt;span class="ln">10&lt;/span>&lt;span class="s">kind: OperatorGroup
+&lt;/span>&lt;span class="ln">11&lt;/span>&lt;span class="s">metadata:
+&lt;/span>&lt;span class="ln">12&lt;/span>&lt;span class="s"> name: operatorgroup
+&lt;/span>&lt;span class="ln">13&lt;/span>&lt;span class="s"> namespace: my-etcd
+&lt;/span>&lt;span class="ln">14&lt;/span>&lt;span class="s">spec:
+&lt;/span>&lt;span class="ln">15&lt;/span>&lt;span class="s"> targetNamespaces:
+&lt;/span>&lt;span class="ln">16&lt;/span>&lt;span class="s"> - my-etcd
+&lt;/span>&lt;span class="ln">17&lt;/span>&lt;span class="s">---
+&lt;/span>&lt;span class="ln">18&lt;/span>&lt;span class="s">apiVersion: operators.coreos.com/v1alpha1
+&lt;/span>&lt;span class="ln">19&lt;/span>&lt;span class="s">kind: Subscription
+&lt;/span>&lt;span class="ln">20&lt;/span>&lt;span class="s">metadata:
+&lt;/span>&lt;span class="ln">21&lt;/span>&lt;span class="s"> name: my-etcd
+&lt;/span>&lt;span class="ln">22&lt;/span>&lt;span class="s"> namespace: my-etcd
+&lt;/span>&lt;span class="ln">23&lt;/span>&lt;span class="s">spec:
+&lt;/span>&lt;span class="ln">24&lt;/span>&lt;span class="s"> channel: singlenamespace-alpha
+&lt;/span>&lt;span class="ln">25&lt;/span>&lt;span class="s"> name: etcd
+&lt;/span>&lt;span class="ln">26&lt;/span>&lt;span class="s"> source: operatorhubio-catalog # refer to the catalogsource/operatorhubio-catalog
+&lt;/span>&lt;span class="ln">27&lt;/span>&lt;span class="s"> sourceNamespace: olm # in olm namespace
+&lt;/span>&lt;span class="ln">28&lt;/span>&lt;span class="s">EOF&lt;/span>
+&lt;span class="ln">29&lt;/span>
+&lt;span class="ln">30&lt;/span>&lt;span class="c1"># In seconds, you will see the etcd operator is up and running&lt;/span>
+&lt;span class="ln">31&lt;/span>$ kubectl get csv,pod -n my-etcd
+&lt;span class="ln">32&lt;/span>NAME DISPLAY VERSION REPLACES PHASE
+&lt;span class="ln">33&lt;/span>clusterserviceversion.operators.coreos.com/etcdoperator.v0.9.4 etcd 0.9.4 etcdoperator.v0.9.2 Succeeded
+&lt;span class="ln">34&lt;/span>clusterserviceversion.operators.coreos.com/memcached-operator.v0.0.2 Memcached Operator 0.0.2 memcached-operator.v0.0.1 Succeeded
+&lt;span class="ln">35&lt;/span>
+&lt;span class="ln">36&lt;/span>NAME READY STATUS RESTARTS AGE
+&lt;span class="ln">37&lt;/span>pod/etcd-operator-59b94dd6df-v2xw2 3/3 Running &lt;span class="m">0&lt;/span> 55s
+&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>Declare and create the desired &lt;code>etcd&lt;/code> cluster:&lt;/li>
+&lt;/ol>
+&lt;p>Once the operator is ready, it's time to create an &lt;code>etcd&lt;/code> CR to provision a &lt;code>etcd&lt;/code> cluster in an easy way:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Create the EtcdCluster CR&lt;/span>
+&lt;span class="ln"> 2&lt;/span>$ kubectl -n my-etcd apply -f - &lt;span class="s">&amp;lt;&amp;lt;EOF
+&lt;/span>&lt;span class="ln"> 3&lt;/span>&lt;span class="s">apiVersion: etcd.database.coreos.com/v1beta2
+&lt;/span>&lt;span class="ln"> 4&lt;/span>&lt;span class="s">kind: EtcdCluster
+&lt;/span>&lt;span class="ln"> 5&lt;/span>&lt;span class="s">metadata:
+&lt;/span>&lt;span class="ln"> 6&lt;/span>&lt;span class="s"> name: example
+&lt;/span>&lt;span class="ln"> 7&lt;/span>&lt;span class="s">spec:
+&lt;/span>&lt;span class="ln"> 8&lt;/span>&lt;span class="s"> size: 3
+&lt;/span>&lt;span class="ln"> 9&lt;/span>&lt;span class="s"> version: 3.2.13
+&lt;/span>&lt;span class="ln">10&lt;/span>&lt;span class="s">EOF&lt;/span>
+&lt;span class="ln">11&lt;/span>
+&lt;span class="ln">12&lt;/span>&lt;span class="c1"># Soon we will see the cluster is provisioned with desired 3 nodes&lt;/span>
+&lt;span class="ln">13&lt;/span>$ kubectl get pod -n my-etcd
+&lt;span class="ln">14&lt;/span>NAME READY STATUS RESTARTS AGE
+&lt;span class="ln">15&lt;/span>etcd-operator-59b94dd6df-v2xw2 3/3 Running &lt;span class="m">0&lt;/span> 17m
+&lt;span class="ln">16&lt;/span>example-6sklt68tzj 1/1 Running &lt;span class="m">0&lt;/span> 2m54s
+&lt;span class="ln">17&lt;/span>example-fkz5dswdd8 1/1 Running &lt;span class="m">0&lt;/span> 2m6s
+&lt;span class="ln">18&lt;/span>example-fxlhbr9mpf 1/1 Running &lt;span class="m">0&lt;/span> 86s
+&lt;span class="ln">19&lt;/span>
+&lt;span class="ln">20&lt;/span>&lt;span class="c1"># Let&amp;#39;s log into it to have a try&lt;/span>
+&lt;span class="ln">21&lt;/span>k &lt;span class="nb">exec&lt;/span> -it -n my-etcd example-6sklt68tzj -- sh
+&lt;span class="ln">22&lt;/span>/ &lt;span class="c1"># etcdctl --endpoints http://127.0.0.1:2379 ls /&lt;/span>
+&lt;span class="ln">23&lt;/span>/ &lt;span class="c1"># etcdctl --endpoints http://127.0.0.1:2379 set /my-key my-value&lt;/span>
+&lt;span class="ln">24&lt;/span>my-value
+&lt;span class="ln">25&lt;/span>/ &lt;span class="c1"># etcdctl --endpoints http://127.0.0.1:2379 ls /&lt;/span>
+&lt;span class="ln">26&lt;/span>/my-key
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Yep, it works perfectly fine.&lt;/p>
+&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>&lt;a href="https://operatorframework.io/">Operator Framework&lt;/a> offers two major components:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://sdk.operatorframework.io/">&lt;code>Operator SDK&lt;/code>&lt;/a>; and&lt;/li>
+&lt;li>&lt;a href="https://olm.operatorframework.io/">&lt;code>Operator Lifecycle Manager (OLM)&lt;/code>&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>In &lt;a href="https://brightzheng100.github.io/post/2021/06/diving-deeper-into-operator-framework-part1/">part 1&lt;/a>, we've learned that &lt;a href="https://sdk.operatorframework.io/">&lt;code>Operator SDK&lt;/code>&lt;/a> has been a great tool to boost productivity for Kubernetes operator developers with a series of cool features:&lt;/p>
+&lt;ul>
+&lt;li>Project scaffolding and code generation to bootstrap a new project fast&lt;/li>
+&lt;li>High level APIs and abstractions so developer can write the operational logic more intuitively&lt;/li>
+&lt;li>Extensions to cover more common operator use cases&lt;/li>
+&lt;/ul>
+&lt;p>In this part 2, we've dived deeper into &lt;a href="https://olm.operatorframework.io/">&lt;code>Operator Lifecycle Manager (OLM)&lt;/code>&lt;/a> which focuses more on the operator itself, around its lifecycle management.
+OLM defines a precise operational model to cover &lt;strong>bundling&lt;/strong>, &lt;strong>distribution&lt;/strong>, &lt;strong>discovery&lt;/strong>, and &lt;strong>provisioning&lt;/strong> so that we have a better way to collaborate, manage and operate Kubernetes-native applications, aka operators.&lt;/p>
+&lt;p>&lt;img src="https://brightzheng100.github.io/images/2021/post-diving-deeper-into-operator-framework-part2-model.png" alt="OLM Model">&lt;/p>
+&lt;p>As a result, &lt;a href="https://operatorframework.io/">Operator Framework&lt;/a> has become one of the best tools while building native Kubenetes applications and platforms on top of Kubenetes foundation.&lt;/p>
+&lt;p>Now if you look back to this quote, you will have deeper understanding of the rational:&lt;/p>
+&lt;style type="text/css">
+.twitter-tweet {
+font: 14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+border-left: 4px solid #2b7bb9;
+padding-left: 1.5em;
+color: #555;
+}
+.twitter-tweet a {
+color: #2b7bb9;
+text-decoration: none;
+}
+blockquote.twitter-tweet a:hover,
+blockquote.twitter-tweet a:focus {
+text-decoration: underline;
+}
+&lt;/style>
+&lt;blockquote class="twitter-tweet">&lt;p lang="en" dir="ltr">Kubernetes is a platform for building platforms. It&amp;#39;s a better place to start; not the endgame.&lt;/p>&amp;mdash; Kelsey Hightower (@kelseyhightower) &lt;a href="https://twitter.com/kelseyhightower/status/935252923721793536?ref_src=twsrc%5Etfw">November 27, 2017&lt;/a>&lt;/blockquote></description></item><item><title>Diving Deeper Into Operator Framework, Part 1</title><link>https://brightzheng100.github.io/post/2021/06/diving-deeper-into-operator-framework-part-1/</link><pubDate>Sat, 05 Jun 2021 11:55:46 +0800</pubDate><guid>https://brightzheng100.github.io/post/2021/06/diving-deeper-into-operator-framework-part-1/</guid><description>
 &lt;p>When managing and operating complex software on Kubernetes, it's very common to think about the operator pattern which can simplify a lot of things for day 1 and day 2, from the SRE/Operator perspective, with the cost of coding.&lt;/p>
 &lt;style type="text/css">
 .twitter-tweet {
@@ -159,7 +834,7 @@ text-decoration: underline;
 &lt;p>There are two part of this blog series:&lt;/p>
 &lt;ul>
 &lt;li>Part 1: which is this blog, let me walk you through a typical Kubernetes operator building process;&lt;/li>
-&lt;li>Part 2: I'll dive deeper into &lt;a href="https://olm.operatorframework.io/">&lt;code>Operator Lifecycle Manager (OLM)&lt;/code>&lt;/a>, &lt;a href="https://brightzheng100.github.io/post/2021/06/diving-deeper-into-operator-framwork-part-2/">here&lt;/a>.&lt;/li>
+&lt;li>Part 2: I'll dive deeper into &lt;a href="https://olm.operatorframework.io/">&lt;code>Operator Lifecycle Manager (OLM)&lt;/code>&lt;/a>, &lt;a href="https://brightzheng100.github.io/post/2021/06/diving-deeper-into-operator-framework-part-2/">here&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="quick-start">Quick Start&lt;/h2>
 &lt;p>The best place to start with &lt;code>Operator SDK&lt;/code> should be here: &lt;a href="https://sdk.operatorframework.io/docs/">https://sdk.operatorframework.io/docs/&lt;/a>.&lt;/p>
