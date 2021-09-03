@@ -6,10 +6,10 @@ question of &amp;quot;who will monitor the monitors&amp;quot;.&lt;/p>
 &lt;p>It's &lt;a href="https://olm.operatorframework.io/">&lt;code>Operator Lifecycle Manager (OLM)&lt;/code>&lt;/a>: The Operator Lifecycle Manager (OLM) extends Kubernetes to provide a declarative way to install, manage, and upgrade Operators on a cluster.&lt;/p>
 &lt;p>The OLM is a component of the &lt;a href="https://www.operatorframework.io/">Operator Framework&lt;/a>, an open source toolkit to manage Kubernetes native applications, called Operators, in a streamlined and scalable way.&lt;/p>
 &lt;h2 id="install-olm">Install OLM&lt;/h2>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ operator-sdk olm install
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ operator-sdk olm install
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Within 2 minutes or so, the installation will be done.&lt;/p>
 &lt;p>Let's take a look what have been installed by this command through the logs:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln"> 1&lt;/span>INFO[0002] Fetching CRDs for version &amp;#34;latest&amp;#34;
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln"> 1&lt;/span>INFO[0002] Fetching CRDs for version &amp;#34;latest&amp;#34;
 &lt;span class="ln"> 2&lt;/span>INFO[0002] Fetching resources for resolved version &amp;#34;latest&amp;#34;
 &lt;span class="ln"> 3&lt;/span>INFO[0012] Creating CRDs and resources
 &lt;span class="ln"> 4&lt;/span>INFO[0012] Creating CustomResourceDefinition &amp;#34;catalogsources.operators.coreos.com&amp;#34;
@@ -107,7 +107,7 @@ question of &amp;quot;who will monitor the monitors&amp;quot;.&lt;/p>
 &lt;p>In the real world, the &lt;code>CatalogSource&lt;/code>, &lt;code>Subscription&lt;/code> and &lt;code>OperatorGroup&lt;/code> are the most important objects that we must understand.&lt;/p>
 &lt;h2 id="olm-status">OLM status&lt;/h2>
 &lt;p>&lt;code>operator-sdk&lt;/code> CLI provides a handy command to check the status of OLM:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>$ operator-sdk olm status
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>$ operator-sdk olm status
 &lt;span class="ln"> 2&lt;/span>INFO&lt;span class="o">[&lt;/span>0001&lt;span class="o">]&lt;/span> Fetching CRDs &lt;span class="k">for&lt;/span> version &lt;span class="s2">&amp;#34;0.18.1&amp;#34;&lt;/span>
 &lt;span class="ln"> 3&lt;/span>INFO&lt;span class="o">[&lt;/span>0001&lt;span class="o">]&lt;/span> Fetching resources &lt;span class="k">for&lt;/span> resolved version &lt;span class="s2">&amp;#34;v0.18.1&amp;#34;&lt;/span>
 &lt;span class="ln"> 4&lt;/span>INFO&lt;span class="o">[&lt;/span>0002&lt;span class="o">]&lt;/span> Successfully got OLM status &lt;span class="k">for&lt;/span> version &lt;span class="s2">&amp;#34;0.18.1&amp;#34;&lt;/span>
@@ -135,13 +135,13 @@ question of &amp;quot;who will monitor the monitors&amp;quot;.&lt;/p>
 &lt;span class="ln">26&lt;/span>system:controller:operator-lifecycle-manager ClusterRole Installed
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="build-and-publish-the-bundle-image">Build and publish the bundle image&lt;/h2>
 &lt;p>Generate the bundle files, build and publish the bundle image:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># In part 1 we&amp;#39;ve already updated the Makefile to avoid specifying IMG&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># In part 1 we&amp;#39;ve already updated the Makefile to avoid specifying IMG&lt;/span>
 &lt;span class="ln">2&lt;/span>&lt;span class="c1"># make bundle IMG=&amp;#34;brightzheng100/memcached-operator:v0.0.1&amp;#34;&lt;/span>
 &lt;span class="ln">3&lt;/span>&lt;span class="c1"># make bundle-build bundle-push IMAGE_TAG_BASE=&amp;#34;brightzheng100/memcached-operator&amp;#34; VERSION=&amp;#34;0.0.1&amp;#34;&lt;/span>
 &lt;span class="ln">4&lt;/span>make bundle
 &lt;span class="ln">5&lt;/span>make bundle-build bundle-push
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Note: If you run &lt;code>make bundle&lt;/code> at first time, there are some questions prompted for your inputs, which are some of the metadata used to build the CSV:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln"> 1&lt;/span>Display name for the operator (required):
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln"> 1&lt;/span>Display name for the operator (required):
 &lt;span class="ln"> 2&lt;/span>&amp;gt; Memcached Operator
 &lt;span class="ln"> 3&lt;/span>
 &lt;span class="ln"> 4&lt;/span>Description for the operator (required):
@@ -168,9 +168,9 @@ question of &amp;quot;who will monitor the monitors&amp;quot;.&lt;/p>
 &lt;p>And once we've done the &lt;code>bundle-build bundle-push&lt;/code>, the bundle image will be built and published.&lt;/p>
 &lt;h2 id="run-the-bundle">Run the bundle&lt;/h2>
 &lt;p>Run the bundle, to install the operator, with a specified namespace if you want:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ operator-sdk run bundle docker.io/brightzheng100/memcached-operator-bundle:v0.0.1 -n operators
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ operator-sdk run bundle docker.io/brightzheng100/memcached-operator-bundle:v0.0.1 -n operators
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>And we should be able to see some logs like:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln"> 1&lt;/span>INFO[0017] Successfully created registry pod: docker-io-brightzheng100-memcached-operator-bundle-v0-0-1
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln"> 1&lt;/span>INFO[0017] Successfully created registry pod: docker-io-brightzheng100-memcached-operator-bundle-v0-0-1
 &lt;span class="ln"> 2&lt;/span>INFO[0018] Created CatalogSource: memcached-operator-catalog
 &lt;span class="ln"> 3&lt;/span>INFO[0018] OperatorGroup &amp;#34;operator-sdk-og&amp;#34; created
 &lt;span class="ln"> 4&lt;/span>INFO[0018] Created Subscription: memcached-operator-v0-0-1-sub
@@ -182,7 +182,7 @@ question of &amp;quot;who will monitor the monitors&amp;quot;.&lt;/p>
 &lt;span class="ln">10&lt;/span>INFO[0063] Found ClusterServiceVersion &amp;#34;default/memcached-operator.v0.0.1&amp;#34; phase: Succeeded
 &lt;span class="ln">11&lt;/span>INFO[0063] OLM has successfully installed &amp;#34;memcached-operator.v0.0.1&amp;#34;
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>And objects are installed into specified namespace, here is &lt;code>operators&lt;/code>:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Check out the pods&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Check out the pods&lt;/span>
 &lt;span class="ln"> 2&lt;/span>$ kubectl get pods -n operators
 &lt;span class="ln"> 3&lt;/span>NAME READY STATUS RESTARTS AGE
 &lt;span class="ln"> 4&lt;/span>c551e776de29960763c9167350ea816c5da7be5de6ff4def66c1e48acc6w8vn 0/1 Completed &lt;span class="m">0&lt;/span> 88s
@@ -214,9 +214,9 @@ question of &amp;quot;who will monitor the monitors&amp;quot;.&lt;/p>
 &lt;/blockquote>
 &lt;h2 id="create-the-cr">Create the CR&lt;/h2>
 &lt;p>Let's track the logs of the created operator pod:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>kubectl logs memcached-operator-controller-manager-77d65c8c67-rjvt7 -n operators -f --all-containers
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>kubectl logs memcached-operator-controller-manager-77d65c8c67-rjvt7 -n operators -f --all-containers
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>And then create and delete the CR:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Create a CR, which can refer to the example under /config/samples/cache_v1alpha1_memcached.yaml&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Create a CR, which can refer to the example under /config/samples/cache_v1alpha1_memcached.yaml&lt;/span>
 &lt;span class="ln"> 2&lt;/span>$ kubectl apply -f - &lt;span class="s">&amp;lt;&amp;lt;EOF
 &lt;/span>&lt;span class="ln"> 3&lt;/span>&lt;span class="s">apiVersion: cache.example.com/v1alpha1
 &lt;/span>&lt;span class="ln"> 4&lt;/span>&lt;span class="s">kind: Memcached
@@ -235,14 +235,14 @@ question of &amp;quot;who will monitor the monitors&amp;quot;.&lt;/p>
 &lt;span class="ln">17&lt;/span>&lt;span class="c1"># Then delete it&lt;/span>
 &lt;span class="ln">18&lt;/span>$ kubectl delete Memcached/memcached-sample
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>We should be able to see exactly the same message twice, as the experiment we did in &lt;a href="https://brightzheng100.github.io/post/2021/06/diving-deeper-into-operator-framework-part1/">part 1&lt;/a>:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>2021-06-05T13:25:28.760Z INFO controllers.Memcached great, the Reconcile is really triggered!
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>2021-06-05T13:25:28.760Z INFO controllers.Memcached great, the Reconcile is really triggered!
 &lt;span class="ln">2&lt;/span>2021-06-05T13:26:18.726Z INFO controllers.Memcached great, the Reconcile is really triggered!
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>So you've seen that the operator works the same as the one we manually deployed.&lt;/p>
 &lt;h2 id="lets-dive-a-bit-deeper-with-what-we-have">Let's dive a bit deeper with what we have&lt;/h2>
 &lt;p>The operator has been installed into the purposely specified namespace &lt;code>operators&lt;/code>, which can be any namespace actually.&lt;/p>
 &lt;p>Now let's check out the yaml, which is a deployment:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ kubectl get deploy -n operators memcached-operator-controller-manager -o yaml
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="ln"> 1&lt;/span>&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">apps/v1&lt;/span>&lt;span class="w">
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ kubectl get deploy -n operators memcached-operator-controller-manager -o yaml
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="ln"> 1&lt;/span>&lt;span class="nt">apiVersion&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">apps/v1&lt;/span>&lt;span class="w">
 &lt;/span>&lt;span class="ln"> 2&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">kind&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Deployment&lt;/span>&lt;span class="w">
 &lt;/span>&lt;span class="ln"> 3&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">metadata&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
 &lt;/span>&lt;span class="ln"> 4&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">annotations&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
@@ -390,7 +390,7 @@ question of &amp;quot;who will monitor the monitors&amp;quot;.&lt;/p>
 &lt;p>There are no good docs in offical &lt;a href="https://sdk.operatorframework.io/docs/">docs&lt;/a>.&lt;/p>
 &lt;p>Actuall it derives from this &lt;a href="https://github.com/brancz/kube-rbac-proxy">repo&lt;/a> and is hosted by the Kubebuilder team in GCR. The main goal of having this container injected as a sidecar is to be a small HTTP proxy that can perform RBAC authorization against the Kubernetes API using SubjectAccessReview to protect the operator behind.&lt;/p>
 &lt;p>The schema of &lt;code>ClusterServiceVersion/memcached-operator.v0.0.1&lt;/code> can be found in file &lt;code>bundle/manifests/memcached-operator.clusterserviceversion.yaml&lt;/code> and you might find this in the YAML file:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="ln">1&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">installModes&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="ln">1&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">installModes&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
 &lt;/span>&lt;span class="ln">2&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">supported&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">false&lt;/span>&lt;span class="w">
 &lt;/span>&lt;span class="ln">3&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">OwnNamespace&lt;/span>&lt;span class="w">
 &lt;/span>&lt;span class="ln">4&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">supported&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">false&lt;/span>&lt;span class="w">
@@ -405,28 +405,28 @@ question of &amp;quot;who will monitor the monitors&amp;quot;.&lt;/p>
 &lt;h3 id="make-more-changes-in-our-operator-code">Make more changes in our operator code&lt;/h3>
 &lt;p>Remember the &amp;quot;huge&amp;quot; change we made in part 1 for our operator, we will make even bigger change:)&lt;/p>
 &lt;p>In &lt;code>controllers/memcached_controller.go&lt;/code>, from:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="ln">1&lt;/span>&lt;span class="nx">r&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Log&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Info&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;great, the Reconcile is really triggered!&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="ln">1&lt;/span>&lt;span class="nx">r&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Log&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Info&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;great, the Reconcile is really triggered!&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>To:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="ln">1&lt;/span>&lt;span class="nx">r&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Log&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Info&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;great, the Reconcile is really triggered in v2!&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="ln">1&lt;/span>&lt;span class="nx">r&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Log&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Info&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;great, the Reconcile is really triggered in v2!&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="build-and-publish-the-operator-image">Build and publish the operator image&lt;/h3>
 &lt;p>As usual, let's build the publish the image. But this time we're going to specify the version:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># Docker build and push with a specified VERSION to replace the default 0.0.1&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># Docker build and push with a specified VERSION to replace the default 0.0.1&lt;/span>
 &lt;span class="ln">2&lt;/span>$ make docker-build docker-push &lt;span class="nv">VERSION&lt;/span>&lt;span class="o">=&lt;/span>0.0.2
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="build-and-publish-the-operator-bundle-image">Build and publish the operator bundle image&lt;/h3>
 &lt;p>Now we can refresh the bundle with the new version, and then push the build and push the bundle image to publish:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># Bundle it with specified VERSION too, this will update the CSV file&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># Bundle it with specified VERSION too, this will update the CSV file&lt;/span>
 &lt;span class="ln">2&lt;/span>$ make bundle &lt;span class="nv">VERSION&lt;/span>&lt;span class="o">=&lt;/span>0.0.2
 &lt;span class="ln">3&lt;/span>
 &lt;span class="ln">4&lt;/span>&lt;span class="c1"># Then build and push the bundle image&lt;/span>
 &lt;span class="ln">5&lt;/span>$ make bundle-build bundle-push &lt;span class="nv">VERSION&lt;/span>&lt;span class="o">=&lt;/span>0.0.2
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>We even can check the locally cached Docker images:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ docker images &lt;span class="p">|&lt;/span> grep memcached
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ docker images &lt;span class="p">|&lt;/span> grep memcached
 &lt;span class="ln">2&lt;/span>brightzheng100/memcached-operator-bundle v0.0.2 dc0a255ecff9 &lt;span class="m">19&lt;/span> seconds ago 10.1kB
 &lt;span class="ln">3&lt;/span>brightzheng100/memcached-operator v0.0.2 b3e76e7f5f78 &lt;span class="m">6&lt;/span> minutes ago 47.4MB
 &lt;span class="ln">4&lt;/span>...
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="upgrade-the-operator-by-upgrading-the-bundle">Upgrade the operator by upgrading the bundle&lt;/h3>
 &lt;p>Finally, let's upgrade the bundle:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>$ operator-sdk run bundle-upgrade docker.io/brightzheng100/memcached-operator-bundle:v0.0.2 -n operators
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>$ operator-sdk run bundle-upgrade docker.io/brightzheng100/memcached-operator-bundle:v0.0.2 -n operators
 &lt;span class="ln"> 2&lt;/span>INFO&lt;span class="o">[&lt;/span>0005&lt;span class="o">]&lt;/span> Found existing subscription with name memcached-operator-v0-0-1-sub and namespace operators
 &lt;span class="ln"> 3&lt;/span>INFO&lt;span class="o">[&lt;/span>0005&lt;span class="o">]&lt;/span> Found existing catalog &lt;span class="nb">source&lt;/span> with name memcached-operator-catalog and namespace operators
 &lt;span class="ln"> 4&lt;/span>INFO&lt;span class="o">[&lt;/span>0013&lt;span class="o">]&lt;/span> Successfully created registry pod: docker-io-brightzheng100-memcached-operator-bundle-v0-0-2
@@ -447,7 +447,7 @@ question of &amp;quot;who will monitor the monitors&amp;quot;.&lt;/p>
 &lt;p>A job starts to prepare and eventually starts a pod serving as &lt;code>operator registry&lt;/code>&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ kubectl logs -n operators docker-io-brightzheng100-memcached-operator-bundle-v0-0-2
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ kubectl logs -n operators docker-io-brightzheng100-memcached-operator-bundle-v0-0-2
 &lt;span class="ln">2&lt;/span>...
 &lt;span class="ln">3&lt;/span>&lt;span class="nv">time&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;2021-06-06T08:20:04Z&amp;#34;&lt;/span> &lt;span class="nv">level&lt;/span>&lt;span class="o">=&lt;/span>info &lt;span class="nv">msg&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;Keeping server open for infinite seconds&amp;#34;&lt;/span> &lt;span class="nv">database&lt;/span>&lt;span class="o">=&lt;/span>/database/index.db &lt;span class="nv">port&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">50051&lt;/span>
 &lt;span class="ln">4&lt;/span>&lt;span class="nv">time&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;2021-06-06T08:20:04Z&amp;#34;&lt;/span> &lt;span class="nv">level&lt;/span>&lt;span class="o">=&lt;/span>info &lt;span class="nv">msg&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;serving registry&amp;#34;&lt;/span> &lt;span class="nv">database&lt;/span>&lt;span class="o">=&lt;/span>/database/index.db &lt;span class="nv">port&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">50051&lt;/span>
@@ -459,7 +459,7 @@ question of &amp;quot;who will monitor the monitors&amp;quot;.&lt;/p>
 &lt;p>In Operator Framework world, a &lt;strong>&amp;quot;bundle&amp;quot;&lt;/strong> is meant to represent a specific version of an operator with a structured directory of files with one &lt;code>ClusterServiceVersion&lt;/code>.&lt;/p>
 &lt;p>According to the docs &lt;a href="https://github.com/operator-framework/operator-registry#manifest-format">here&lt;/a>: A bundle typically includes a ClusterServiceVersion and the CRDs that define the owned APIs of the CSV in its manifest directory, though additional objects may be included. It also includes an annotation file in its metadata folder which defines some higher level aggregate data that helps to describe the format and package information about how the bundle should be added into an index of bundles.&lt;/p>
 &lt;p>In our case the folder structure is like:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>$ tree bundle
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>$ tree bundle
 &lt;span class="ln"> 2&lt;/span>bundle
 &lt;span class="ln"> 3&lt;/span>├── manifests
 &lt;span class="ln"> 4&lt;/span>│   ├── cache.example.com_memcacheds.yaml
@@ -477,14 +477,14 @@ question of &amp;quot;who will monitor the monitors&amp;quot;.&lt;/p>
 &lt;span class="ln">16&lt;/span>&lt;span class="m">4&lt;/span> directories, &lt;span class="m">8&lt;/span> files
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>And obviously, bundle image is a &lt;strong>way&lt;/strong> using OCI spec container image as a method of storing the manifest and metadata contents of individual operator bundles.&lt;/p>
 &lt;p>So if you recall the pods we have within our &lt;code>operators&lt;/code> namespace:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ kubectl get pod -n operators
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ kubectl get pod -n operators
 &lt;span class="ln">2&lt;/span>NAME READY STATUS RESTARTS AGE
 &lt;span class="ln">3&lt;/span>a861f25fcb3303cc6d11282fb2ecc2e886f24ff6142bb7511df62ea0caw7v7t 0/1 Completed &lt;span class="m">0&lt;/span> 71m
 &lt;span class="ln">4&lt;/span>c551e776de29960763c9167350ea816c5da7be5de6ff4def66c1e48acc427qv 0/1 Completed &lt;span class="m">0&lt;/span> 74m
 &lt;span class="ln">5&lt;/span>docker-io-brightzheng100-memcached-operator-bundle-v0-0-2 1/1 Running &lt;span class="m">0&lt;/span> 71m
 &lt;span class="ln">6&lt;/span>memcached-operator-controller-manager-5f7468f5cc-rnf2b 2/2 Running &lt;span class="m">0&lt;/span> 70m
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>You will realize that the pod of &lt;code>docker-io-brightzheng100-memcached-operator-bundle-v0-0-2&lt;/code> is serving as a &lt;code>gRPC&lt;/code> source for OLM to discover the operators by an object with the type of &lt;code>CatalogSource&lt;/code>:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Let&amp;#39;s see what CatalogSource objects we have&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Let&amp;#39;s see what CatalogSource objects we have&lt;/span>
 &lt;span class="ln"> 2&lt;/span>$ kubectl get CatalogSource -n operators
 &lt;span class="ln"> 3&lt;/span>NAME DISPLAY TYPE PUBLISHER AGE
 &lt;span class="ln"> 4&lt;/span>memcached-operator-catalog memcached-operator grpc operator-sdk 77m
@@ -517,7 +517,7 @@ question of &amp;quot;who will monitor the monitors&amp;quot;.&lt;/p>
 &lt;span class="ln">31&lt;/span> protocol: grpc
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>See this &lt;code>address: 10.244.1.18:50051&lt;/code>, which is being served exactly by the pod of &lt;code>docker-io-brightzheng100-memcached-operator-bundle-v0-0-2&lt;/code>, as the &lt;strong>operator registry&lt;/strong>.&lt;/p>
 &lt;p>There must be a &lt;code>subscription&lt;/code> too, to subscribe for the desired operator, and here it is:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Yes, there is a subscription&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Yes, there is a subscription&lt;/span>
 &lt;span class="ln"> 2&lt;/span>$ kubectl get subscription -n operators
 &lt;span class="ln"> 3&lt;/span>NAME PACKAGE SOURCE CHANNEL
 &lt;span class="ln"> 4&lt;/span>memcached-operator-v0-0-1-sub memcached-operator memcached-operator-catalog alpha
@@ -547,7 +547,7 @@ question of &amp;quot;who will monitor the monitors&amp;quot;.&lt;/p>
 &lt;/ol>
 &lt;h2 id="lets-further-prove-it-by-using-the-etcd-operator-published-in-operatorhubio">Let's further prove it by using the &lt;code>etcd&lt;/code> operator published in OperatorHub.io&lt;/h2>
 &lt;p>If we check carefully you would have found that there is already a &lt;code>CatalogSource&lt;/code> with curated community operators pre-installed:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Check out the catalogsource in olm&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Check out the catalogsource in olm&lt;/span>
 &lt;span class="ln"> 2&lt;/span>$ kubectl get catalogsource -n olm
 &lt;span class="ln"> 3&lt;/span>NAME DISPLAY TYPE PUBLISHER AGE
 &lt;span class="ln"> 4&lt;/span>operatorhubio-catalog Community Operators grpc OperatorHub.io 7d19h
@@ -572,7 +572,7 @@ question of &amp;quot;who will monitor the monitors&amp;quot;.&lt;/p>
 &lt;ol>
 &lt;li>Install the &lt;code>etcd&lt;/code> operator by subscribing to the &lt;code>operatorhubio-catalog&lt;/code> &lt;code>CatalogSource&lt;/code>:&lt;/li>
 &lt;/ol>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Install the etcd operator&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Install the etcd operator&lt;/span>
 &lt;span class="ln"> 2&lt;/span>kubectl apply -f - &lt;span class="s">&amp;lt;&amp;lt;EOF
 &lt;/span>&lt;span class="ln"> 3&lt;/span>&lt;span class="s">---
 &lt;/span>&lt;span class="ln"> 4&lt;/span>&lt;span class="s">apiVersion: v1
@@ -613,7 +613,7 @@ question of &amp;quot;who will monitor the monitors&amp;quot;.&lt;/p>
 &lt;li>Declare and create the desired &lt;code>etcd&lt;/code> cluster:&lt;/li>
 &lt;/ol>
 &lt;p>Once the operator is ready, it's time to create an &lt;code>etcd&lt;/code> CR to provision a &lt;code>etcd&lt;/code> cluster in an easy way:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Create the EtcdCluster CR&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Create the EtcdCluster CR&lt;/span>
 &lt;span class="ln"> 2&lt;/span>$ kubectl -n my-etcd apply -f - &lt;span class="s">&amp;lt;&amp;lt;EOF
 &lt;/span>&lt;span class="ln"> 3&lt;/span>&lt;span class="s">apiVersion: etcd.database.coreos.com/v1beta2
 &lt;/span>&lt;span class="ln"> 4&lt;/span>&lt;span class="s">kind: EtcdCluster
@@ -722,7 +722,7 @@ text-decoration: underline;
 &lt;blockquote>
 &lt;p>Prerequisites: Docker Desktop is up and running.&lt;/p>
 &lt;/blockquote>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Install kind CLI if you haven&amp;#39;t&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Install kind CLI if you haven&amp;#39;t&lt;/span>
 &lt;span class="ln"> 2&lt;/span>$ brew install kind
 &lt;span class="ln"> 3&lt;/span>
 &lt;span class="ln"> 4&lt;/span>&lt;span class="c1"># Prepare a simple config file&lt;/span>
@@ -737,7 +737,7 @@ text-decoration: underline;
 &lt;span class="ln">13&lt;/span>&lt;span class="c1"># And then create the cluster&lt;/span>
 &lt;span class="ln">14&lt;/span>$ kind create cluster --config kind-cluster.yaml
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Once the cluster is created, the current context will be automatically changed to the newly provisioned &lt;code>kind&lt;/code> cluster.&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Let&amp;#39;s check the nodes&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Let&amp;#39;s check the nodes&lt;/span>
 &lt;span class="ln"> 2&lt;/span>$ kubectl get nodes
 &lt;span class="ln"> 3&lt;/span>NAME STATUS ROLES AGE VERSION
 &lt;span class="ln"> 4&lt;/span>kind-control-plane Ready control-plane,master 3h47m v1.21.1
@@ -763,7 +763,7 @@ text-decoration: underline;
 &lt;span class="ln">24&lt;/span>c18e7a78bec6 kindest/node:v1.21.1 &lt;span class="s2">&amp;#34;/usr/local/bin/entr…&amp;#34;&lt;/span> &lt;span class="m">4&lt;/span> hours ago Up &lt;span class="m">4&lt;/span> hours 127.0.0.1:50057-&amp;gt;6443/tcp kind-control-plane
 &lt;span class="ln">25&lt;/span>b4f4856f7181 kindest/node:v1.21.1 &lt;span class="s2">&amp;#34;/usr/local/bin/entr…&amp;#34;&lt;/span> &lt;span class="m">4&lt;/span> hours ago Up &lt;span class="m">4&lt;/span> hours kind-worker
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="installing-operator-sdk">Installing &lt;code>operator-sdk&lt;/code>&lt;/h3>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># Install operator-sdk by brew, if you haven&amp;#39;t&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># Install operator-sdk by brew, if you haven&amp;#39;t&lt;/span>
 &lt;span class="ln">2&lt;/span>$ brew install operator-sdk
 &lt;span class="ln">3&lt;/span>
 &lt;span class="ln">4&lt;/span>&lt;span class="c1"># Check the installed version&lt;/span>
@@ -771,7 +771,7 @@ text-decoration: underline;
 &lt;span class="ln">6&lt;/span>operator-sdk version: &lt;span class="s2">&amp;#34;v1.7.2&amp;#34;&lt;/span>, commit: &lt;span class="s2">&amp;#34;6db9787d4e9ff63f344e23bfa387133112bda56b&amp;#34;&lt;/span>, kubernetes version: &lt;span class="s2">&amp;#34;1.19.4&amp;#34;&lt;/span>, go version: &lt;span class="s2">&amp;#34;go1.15.5&amp;#34;&lt;/span>, GOOS: &lt;span class="s2">&amp;#34;darwin&amp;#34;&lt;/span>, GOARCH: &lt;span class="s2">&amp;#34;amd64&amp;#34;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="initializing-an-operator">Initializing an operator&lt;/h3>
 &lt;p>Let's initialize an operator, say namely &amp;quot;memcached-operator&amp;quot;.&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>$ mkdir memcached-operator &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="nb">cd&lt;/span> memcached-operator
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>$ mkdir memcached-operator &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="nb">cd&lt;/span> memcached-operator
 &lt;span class="ln"> 2&lt;/span>$ operator-sdk init --domain example.com --repo github.com/example/memcached-operator
 &lt;span class="ln"> 3&lt;/span>
 &lt;span class="ln"> 4&lt;/span>&lt;span class="c1"># See what we got&lt;/span>
@@ -823,7 +823,7 @@ text-decoration: underline;
 &lt;/blockquote>
 &lt;h3 id="creating-apis">Creating APIs&lt;/h3>
 &lt;p>We just initialized it with an empty structure. Let's create a simple API named &amp;quot;Memcached&amp;quot;:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Create an API named &amp;#34;Memcached&amp;#34;&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Create an API named &amp;#34;Memcached&amp;#34;&lt;/span>
 &lt;span class="ln"> 2&lt;/span>$ operator-sdk create api --group cache --version v1alpha1 --kind Memcached --resource --controller
 &lt;span class="ln"> 3&lt;/span>
 &lt;span class="ln"> 4&lt;/span>&lt;span class="c1"># See what we got again&lt;/span>
@@ -895,10 +895,10 @@ text-decoration: underline;
 &lt;h3 id="coding-the-operator">Coding the operator&lt;/h3>
 &lt;p>Well, not really the focus for now.&lt;/p>
 &lt;p>But in order to judge whether it really works, let's log something out at least:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># Edit controllers/memcached_controller.go&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># Edit controllers/memcached_controller.go&lt;/span>
 &lt;span class="ln">2&lt;/span>$ vi controllers/memcached_controller.go
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Change this:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="ln">1&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">r&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">MemcachedReconciler&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nf">Reconcile&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">ctx&lt;/span> &lt;span class="nx">context&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Context&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">req&lt;/span> &lt;span class="nx">ctrl&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">ctrl&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Result&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">error&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="ln">1&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">r&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">MemcachedReconciler&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nf">Reconcile&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">ctx&lt;/span> &lt;span class="nx">context&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Context&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">req&lt;/span> &lt;span class="nx">ctrl&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">ctrl&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Result&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">error&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
 &lt;span class="ln">2&lt;/span> &lt;span class="nx">_&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">r&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Log&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">WithValues&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;memcached&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">req&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">NamespacedName&lt;/span>&lt;span class="p">)&lt;/span>
 &lt;span class="ln">3&lt;/span>
 &lt;span class="ln">4&lt;/span> &lt;span class="c1">// your logic here
@@ -906,7 +906,7 @@ text-decoration: underline;
 &lt;span class="ln">6&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="nx">ctrl&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Result&lt;/span>&lt;span class="p">{},&lt;/span> &lt;span class="kc">nil&lt;/span>
 &lt;span class="ln">7&lt;/span>&lt;span class="p">}&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>to:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="ln">1&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">r&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">MemcachedReconciler&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nf">Reconcile&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">ctx&lt;/span> &lt;span class="nx">context&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Context&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">req&lt;/span> &lt;span class="nx">ctrl&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">ctrl&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Result&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">error&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="ln">1&lt;/span>&lt;span class="kd">func&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">r&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">MemcachedReconciler&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nf">Reconcile&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">ctx&lt;/span> &lt;span class="nx">context&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Context&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">req&lt;/span> &lt;span class="nx">ctrl&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">ctrl&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Result&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">error&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
 &lt;span class="ln">2&lt;/span> &lt;span class="nx">_&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">r&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Log&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">WithValues&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;memcached&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">req&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">NamespacedName&lt;/span>&lt;span class="p">)&lt;/span>
 &lt;span class="ln">3&lt;/span>
 &lt;span class="ln">4&lt;/span> &lt;span class="c1">// your logic here
@@ -928,7 +928,7 @@ text-decoration: underline;
 &lt;p>Even we've done nothing on coding the exact reconciliation logic, but guess what, the code generated is workable annd deployable.&lt;/p>
 &lt;p>Since we now focus on the end-to-end process, we can proceed.&lt;/p>
 &lt;p>Typically, we may want to run it outside of Kubernetes as a &amp;quot;normal&amp;quot; Golang project, to have a better development experience within the so-called &amp;quot;inner loop&amp;quot;:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># Firstly, we have to install the CRDs&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># Firstly, we have to install the CRDs&lt;/span>
 &lt;span class="ln">2&lt;/span>$ make install
 &lt;span class="ln">3&lt;/span>
 &lt;span class="ln">4&lt;/span>&lt;span class="c1"># Then run it as a &amp;#34;normal&amp;#34; go project&lt;/span>
@@ -938,7 +938,7 @@ text-decoration: underline;
 &lt;/blockquote>
 &lt;p>Now the operator is actually working, watching the &amp;quot;Memcached&amp;quot; CRs in the default cluster we're now connected to, which is the cluster powered by &lt;code>kind&lt;/code>.&lt;/p>
 &lt;p>And we can open another console to create a CR to see what will happen:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Create a CR, which can refer to the example under config/samples/cache_v1alpha1_memcached.yaml&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Create a CR, which can refer to the example under config/samples/cache_v1alpha1_memcached.yaml&lt;/span>
 &lt;span class="ln"> 2&lt;/span>$ kubectl apply -f - &lt;span class="s">&amp;lt;&amp;lt;EOF
 &lt;/span>&lt;span class="ln"> 3&lt;/span>&lt;span class="s">apiVersion: cache.example.com/v1alpha1
 &lt;/span>&lt;span class="ln"> 4&lt;/span>&lt;span class="s">kind: Memcached
@@ -949,22 +949,22 @@ text-decoration: underline;
 &lt;/span>&lt;span class="ln"> 9&lt;/span>&lt;span class="s"> foo: bar
 &lt;/span>&lt;span class="ln">10&lt;/span>&lt;span class="s">EOF&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>We should be able to see a log message like:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>2021-06-04T15:06:22.493Z INFO controllers.Memcached great, the Reconcile is really triggered!
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>2021-06-04T15:06:22.493Z INFO controllers.Memcached great, the Reconcile is really triggered!
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>As you can imagine, once you've implemented the reconciliation logic properly, this will work out for you.&lt;/p>
 &lt;p>Now let's delete the CR:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ kubectl delete Memcached/memcached-sample
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ kubectl delete Memcached/memcached-sample
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>We should be able to see the same log message again, indicating that the reconciliation logic can be triggered properly for you to handle the events.&lt;/p>
 &lt;h3 id="building-and-running-the-operator">Building and running the operator&lt;/h3>
 &lt;p>Let's pretend that we're happy with what we've developed, it's common to build and publish the operator as a container to a desired container repository like Docker Hub, or Quay.io, or something on prem. The choice is yours!&lt;/p>
 &lt;p>Here I'm going to push to my Docker Hub account, you may change it to yours.
 In this case, it's recommended to update the default &lt;code>Makefile&lt;/code> with below changes:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-diff" data-lang="diff">&lt;span class="ln">1&lt;/span>&lt;span class="gd">-IMG ?= controller:latest
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-diff" data-lang="diff">&lt;span class="ln">1&lt;/span>&lt;span class="gd">-IMG ?= controller:latest
 &lt;/span>&lt;span class="ln">2&lt;/span>&lt;span class="gd">&lt;/span>&lt;span class="gi">+IMG ?= $(IMAGE_TAG_BASE):v$(VERSION)
 &lt;/span>&lt;span class="ln">3&lt;/span>&lt;span class="gi">&lt;/span>
 &lt;span class="ln">4&lt;/span>&lt;span class="gd">-IMAGE_TAG_BASE ?= example.com/memcached-operator
 &lt;/span>&lt;span class="ln">5&lt;/span>&lt;span class="gd">&lt;/span>&lt;span class="gi">+IMAGE_TAG_BASE ?= brightzheng100/memcached-operator
 &lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>So that we can avoid setting the &lt;code>IMG&lt;/code> in the commands all the times.&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Docker build and push&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Docker build and push&lt;/span>
 &lt;span class="ln"> 2&lt;/span>&lt;span class="c1"># Instead of: make docker-build docker-push IMG=&amp;#34;brightzheng100/memcached-operator:0.0.1&amp;#34;&lt;/span>
 &lt;span class="ln"> 3&lt;/span>$ make docker-build docker-push
 &lt;span class="ln"> 4&lt;/span>
@@ -980,7 +980,7 @@ In this case, it's recommended to update the default &lt;code>Makefile&lt;/code>
 &lt;span class="ln">14&lt;/span>&lt;span class="c1"># Tail the logs&lt;/span>
 &lt;span class="ln">15&lt;/span>$ kubectl logs memcached-operator-controller-manager-7c759576bb-fwzfl --all-containers -f -n memcached-operator-system
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Similarlly, we can open a new console and create the CR to test it out:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Create a CR, which can refer to the example under /config/samples/cache_v1alpha1_memcached.yaml&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Create a CR, which can refer to the example under /config/samples/cache_v1alpha1_memcached.yaml&lt;/span>
 &lt;span class="ln"> 2&lt;/span>$ kubectl apply -f - &lt;span class="s">&amp;lt;&amp;lt;EOF
 &lt;/span>&lt;span class="ln"> 3&lt;/span>&lt;span class="s">apiVersion: cache.example.com/v1alpha1
 &lt;/span>&lt;span class="ln"> 4&lt;/span>&lt;span class="s">kind: Memcached
@@ -1000,7 +1000,7 @@ In this case, it's recommended to update the default &lt;code>Makefile&lt;/code>
 &lt;span class="ln">18&lt;/span>$ kubectl delete Memcached/memcached-sample
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>And yes, we should be able to see exactly the log message twice, indicating that the &lt;code>Reconcile&lt;/code> method has been properly triggered twice for the corresponding CR events.&lt;/p>
 &lt;h3 id="clean-up">Clean Up&lt;/h3>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ make undeploy
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ make undeploy
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="conclusion">Conclusion&lt;/h2>
 &lt;p>As you've seen, building Kubernetes operators can be significantly simplified because of the operator frameworks like &lt;code>Operator SDK&lt;/code>.&lt;/p>
 &lt;p>The project, the APIs, the webhooks can be generated by one command each so we can focus on implementing the operator's business logic.&lt;/p>

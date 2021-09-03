@@ -12,14 +12,14 @@
 &lt;li>&lt;code>Git&lt;/code> is installed&lt;/li>
 &lt;li>&lt;code>brew&lt;/code> is installed&lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span># Install hugo
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span># Install hugo
 &lt;span class="ln">2&lt;/span>$ brew install hugo
 &lt;span class="ln">3&lt;/span>
 &lt;span class="ln">4&lt;/span># Check
 &lt;span class="ln">5&lt;/span>$ hugo version
 &lt;span class="ln">6&lt;/span>hugo v0.83.1+extended darwin/amd64 BuildDate=unknown
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-2-create-a-new-site">Step 2: Create a New Site&lt;/h2>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>$ hugo new site brightzheng100
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>$ hugo new site brightzheng100
 &lt;span class="ln"> 2&lt;/span>Congratulations! Your new Hugo site is created in /Users/brightzheng/development/blog/brightzheng100.
 &lt;span class="ln"> 3&lt;/span>
 &lt;span class="ln"> 4&lt;/span>Just a few more steps and you are ready to go:
@@ -39,7 +39,7 @@
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-3-add-a-theme">Step 3: Add a Theme&lt;/h2>
 &lt;p>Pick your prefered theme from here: &lt;a href="https://themes.gohugo.io/">https://themes.gohugo.io/&lt;/a>.
 This is the one I picked: &lt;a href="https://themes.gohugo.io/hugo-clarity/">https://themes.gohugo.io/hugo-clarity/&lt;/a>&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Clone it as a sub module&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Clone it as a sub module&lt;/span>
 &lt;span class="ln"> 2&lt;/span>$ git submodule add https://github.com/chipzoller/hugo-clarity themes/clarity
 &lt;span class="ln"> 3&lt;/span>Cloning into &lt;span class="s1">&amp;#39;/Users/brightzheng/development/blog/brightzheng100/themes/clarity&amp;#39;&lt;/span>...
 &lt;span class="ln"> 4&lt;/span>remote: Enumerating objects: 3126, &lt;span class="k">done&lt;/span>.
@@ -62,46 +62,46 @@ This is the one I picked: &lt;a href="https://themes.gohugo.io/hugo-clarity/">ht
 &lt;span class="ln">21&lt;/span>$ &lt;span class="nb">echo&lt;/span> &lt;span class="nv">theme&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="se">\&amp;#34;&lt;/span>clarity&lt;span class="se">\&amp;#34;&lt;/span> &amp;gt;&amp;gt; config.toml
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-4-add-some-content">Step 4: Add Some Content&lt;/h2>
 &lt;p>You can manually create content files (for example as content/&lt;CATEGORY>/&lt;FILE>.&lt;FORMAT>) and provide metadata in them, however you can use the new command to do a few things for you (like add title and date):&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ hugo new post/getting-started.md
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ hugo new post/getting-started.md
 &lt;span class="ln">2&lt;/span>/Users/brightzheng/development/blog/brightzheng100/content/post/getting-started.md created
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-5-start-the-hugo-server">Step 5: Start the Hugo server&lt;/h2>
 &lt;p>Now, start the Hugo server with drafts enabled:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ hugo server -D
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ hugo server -D
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-6-customize-the-theme">Step 6: Customize the Theme&lt;/h2>
 &lt;p>Your new site already looks great, but you will want to tweak it a little before you release it to the public.&lt;/p>
 &lt;p>Open up config.toml in a text editor:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>baseURL = &amp;#34;https://example.org/&amp;#34;
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>baseURL = &amp;#34;https://example.org/&amp;#34;
 &lt;span class="ln">2&lt;/span>languageCode = &amp;#34;en-us&amp;#34;
 &lt;span class="ln">3&lt;/span>title = &amp;#34;My New Hugo Site&amp;#34;
 &lt;span class="ln">4&lt;/span>theme = &amp;#34;ananke&amp;#34;
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-7-build-static-pages">Step 7: Build static pages&lt;/h2>
 &lt;p>It is simple. Just call:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>hugo -D
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>hugo -D
 &lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
 &lt;p>Note: Output will be in ./public/ directory by default (-d/--destination flag to change it, or set publishdir in the config file).&lt;/p>
 &lt;/blockquote>
 &lt;h2 id="step-8-further-customization">Step 8: Further Customization&lt;/h2>
 &lt;h3 id="language">Language&lt;/h3>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>/config/languages.toml
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>/config/languages.toml
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>What I've done:&lt;/p>
 &lt;ul>
 &lt;li>Updated the supported languages with English only for now&lt;/li>
 &lt;/ul>
 &lt;h3 id="menu">Menu&lt;/h3>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>/config/_default/menu.en.toml
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>/config/_default/menu.en.toml
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>What I've done:&lt;/p>
 &lt;ul>
 &lt;li>Refined the menu items&lt;/li>
 &lt;/ul>
 &lt;h3 id="params">Params&lt;/h3>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>/config/_default/params.toml
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>/config/_default/params.toml
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>What I've done:&lt;/p>
 &lt;ul>
 &lt;li>Changed the params by following the comments&lt;/li>
 &lt;li>Major changes including &lt;code>introDescription&lt;/code>, &lt;code>mainSections&lt;/code>, &lt;code>logo&lt;/code>, &lt;code>footerLogo&lt;/code>, &lt;code>iconsDir&lt;/code> etc.&lt;/li>
 &lt;/ul>
 &lt;h3 id="archetypes">archetypes&lt;/h3>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>/archetypes
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>/archetypes
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>What I've done:&lt;/p>
 &lt;ul>
 &lt;li>added &lt;code>diary.md&lt;/code>&lt;/li>
@@ -131,7 +131,7 @@ Created a new folder named &lt;code>icons&lt;/code> under &lt;code>/static&lt;/c
 &lt;p>Add &lt;code>.github/workflows/gh-pages.yml&lt;/code> to enable GitHub Actions:&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>mkdir -p .github/workflows
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>mkdir -p .github/workflows
 &lt;span class="ln"> 2&lt;/span>
 &lt;span class="ln"> 3&lt;/span>cat &amp;gt; .github/workflows/gh-pages.yml &lt;span class="s">&amp;lt;&amp;lt;&amp;#39;EOF&amp;#39;
 &lt;/span>&lt;span class="ln"> 4&lt;/span>&lt;span class="s">name: Hugo Website Generator
@@ -170,7 +170,7 @@ Created a new folder named &lt;code>icons&lt;/code> under &lt;code>/static&lt;/c
 &lt;/code>&lt;/pre>&lt;/div>&lt;ol start="5">
 &lt;li>Commit and push our code to the private project:&lt;/li>
 &lt;/ol>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>git add .
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>git add .
 &lt;span class="ln">2&lt;/span>git commit -am &lt;span class="s2">&amp;#34;initial commit&amp;#34;&lt;/span>
 &lt;span class="ln">3&lt;/span>git branch -M main
 &lt;span class="ln">4&lt;/span>git remote add origin git@github.com:brightzheng100/brightzheng100.github.io.private.git

@@ -12,13 +12,13 @@
 &lt;p>And adding the upstream remote to our forked Git repos helps us keep in synced with upstream before any contribution.&lt;/p>
 &lt;p>Assuming we have forked the repo.&lt;/p>
 &lt;p>Now we clone our forked repo, with &lt;code>git&lt;/code> protocol:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ git clone git@github.com:YOUR-USERNAME/THE-REPO.git
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ git clone git@github.com:YOUR-USERNAME/THE-REPO.git
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>See what remotes we have:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ git remote -vv
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ git remote -vv
 &lt;span class="ln">2&lt;/span>origin git@github.com:YOUR-USERNAME/THE-REPO.git &lt;span class="o">(&lt;/span>fetch&lt;span class="o">)&lt;/span>
 &lt;span class="ln">3&lt;/span>origin git@github.com:YOUR-USERNAME/THE-REPO.git &lt;span class="o">(&lt;/span>push&lt;span class="o">)&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>To add the upstream remote, with &lt;code>https&lt;/code> protocol:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ git remote add upstream https://github.com/UPSTREAM-NAMESPACE/THE-REPO.git
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ git remote add upstream https://github.com/UPSTREAM-NAMESPACE/THE-REPO.git
 &lt;span class="ln">2&lt;/span>$ git remote -vv
 &lt;span class="ln">3&lt;/span>origin git@github.com:YOUR-USERNAME/THE-REPO.git &lt;span class="o">(&lt;/span>fetch&lt;span class="o">)&lt;/span>
 &lt;span class="ln">4&lt;/span>origin git@github.com:YOUR-USERNAME/THE-REPO.git &lt;span class="o">(&lt;/span>push&lt;span class="o">)&lt;/span>
@@ -28,26 +28,26 @@
 &lt;ol>
 &lt;li>Fetch the branches and their respective commits from the upstream repository to Git's local database:&lt;/li>
 &lt;/ol>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>$ git fetch upstream
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>$ git fetch upstream
 &lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
 &lt;li>Check out your fork's local &lt;code>master&lt;/code> branch:&lt;/li>
 &lt;/ol>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>$ git checkout master
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>$ git checkout master
 &lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
 &lt;li>Merge the updates from &lt;code>upstream/master&lt;/code> into your local &lt;code>origin/master&lt;/code> branch:&lt;/li>
 &lt;/ol>
 &lt;p>This syncs up your fork's local &lt;code>master&lt;/code> branch with the upstream repository &lt;code>upstream/master&lt;/code>, without losing your local changes.&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ git merge upstream/master
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ git merge upstream/master
 &lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
 &lt;li>Push it to your fork:&lt;/li>
 &lt;/ol>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>$ git push
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>$ git push
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="checking-whats-going-to-be-pushed">Checking what's going to be pushed?&lt;/h2>
 &lt;p>For a list of files to be pushed, run:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>$ git diff --stat --cached [remote/branch]
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>$ git diff --stat --cached [remote/branch]
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="contributing-to-a-pr">Contributing to a PR&lt;/h2>
 &lt;p>It's ALWAYS recommended to start the contribution, a potential PR, with a dedicated new branch.&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Start from synced origin/master&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Start from synced origin/master&lt;/span>
 &lt;span class="ln"> 2&lt;/span>$ git checkout master
 &lt;span class="ln"> 3&lt;/span>
 &lt;span class="ln"> 4&lt;/span>&lt;span class="c1"># Create a new local branch&lt;/span>
@@ -67,7 +67,7 @@
 &lt;h2 id="contributing-to-multiple-prs">Contributing to multiple PRs&lt;/h2>
 &lt;p>Multiple PRs are of course possible, simply with different branches.&lt;/p>
 &lt;p>Let's say we start our feature 1:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>$ git checkout master
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>$ git checkout master
 &lt;span class="ln">2&lt;/span>$ git checkout -b my-awesome-feature-1
 &lt;span class="ln">3&lt;/span>...work, work, work
 &lt;span class="ln">4&lt;/span>$ git add xxx
@@ -75,7 +75,7 @@
 &lt;span class="ln">6&lt;/span>$ git push origin my-awesome-feature-1
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Then we can send it as a PR through GitHub UI.&lt;/p>
 &lt;p>While pending for further discussions and merging, you can start another feature 2 too:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>$ git checkout master
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>$ git checkout master
 &lt;span class="ln">2&lt;/span>$ git checkout -b my-awesome-feature-2
 &lt;span class="ln">3&lt;/span>...work, work, work
 &lt;span class="ln">4&lt;/span>$ git add xxx
@@ -84,7 +84,7 @@
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>So two features are relatively independent.&lt;/p>
 &lt;h2 id="how-to-rollback-some-specific-files">How to &amp;quot;rollback&amp;quot; some specific files?&lt;/h2>
 &lt;p>You may have messed up some files and you want to &amp;quot;rollback&amp;quot; to the original:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># To simply rollback that file&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># To simply rollback that file&lt;/span>
 &lt;span class="ln">2&lt;/span>$ git checkout that-file.ext
 &lt;span class="ln">3&lt;/span>
 &lt;span class="ln">4&lt;/span>&lt;span class="c1"># Or to rollback to some specific version&lt;/span>
@@ -100,14 +100,14 @@
 &lt;p>This is okay and you may want to &lt;strong>reset&lt;/strong> it in your fork after the PR has been closed.&lt;/p>
 &lt;p>If you've adopted PR-as-a-new-branch approach, you can simply remove the local and remote branch if you don't want to keep it -- or you simply do nothing and leave it there, for your future reference.&lt;/p>
 &lt;p>Let's say you want to remove it completely:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># Delete the local branch&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># Delete the local branch&lt;/span>
 &lt;span class="ln">2&lt;/span>$ git branch -d &amp;lt;branch_name&amp;gt;
 &lt;span class="ln">3&lt;/span>
 &lt;span class="ln">4&lt;/span>&lt;span class="c1"># Delete the remote branch&lt;/span>
 &lt;span class="ln">5&lt;/span>$ git push --delete origin &amp;lt;branch_name&amp;gt;
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Worse case might be: you were using &lt;code>master&lt;/code>, instead of a dedicated branch, while working on the new feature.&lt;/p>
 &lt;p>Do this in this case:&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Fetch the upstream/master&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Fetch the upstream/master&lt;/span>
 &lt;span class="ln"> 2&lt;/span>$ git fetch upstream
 &lt;span class="ln"> 3&lt;/span>
 &lt;span class="ln"> 4&lt;/span>&lt;span class="c1"># Check out to the origin/master&lt;/span>
