@@ -69,7 +69,7 @@
 <span><svg class="icon"><use xlink:href="#calendar"/></svg></span>
 <span class=post_date>
 Jun 20, 2021</span>
-<span class=post_time> · 4 min read</span><span>&nbsp;· <a href=https://brightzheng100.github.io/tags/tech title=Tech class="post_tag button button_translucent">Tech
+<span class=post_time> · 5 min read</span><span>&nbsp;· <a href=https://brightzheng100.github.io/tags/tech title=Tech class="post_tag button button_translucent">Tech
 </a><a href=https://brightzheng100.github.io/tags/tutorial title=Tutorial class="post_tag button button_translucent">Tutorial
 </a><a href=https://brightzheng100.github.io/tags/oss title=OSS class="post_tag button button_translucent">OSS
 </a><a href=https://brightzheng100.github.io/tags/git title=Git class="post_tag button button_translucent">Git
@@ -101,6 +101,7 @@ Share on:
 <li><a href=#contributing-to-multiple-prs>Contributing to multiple PRs</a></li>
 <li><a href=#how-to-rollback-some-specific-files>How to "rollback" some specific files?</a></li>
 <li><a href=#resetting-things-if-pr-is-not-accepted>Resetting things if PR is not accepted?</a></li>
+<li><a href=#updating-commit-messages-after-pushing>Updating commit messages after pushing</a></li>
 </ul>
 </nav>
 <hr>
@@ -225,6 +226,42 @@ Share on:
 <span class=ln>12</span>
 <span class=ln>13</span><span class=c1># Force push to origin/master</span>
 <span class=ln>14</span>git push --force-with-lease origin master
+</code></pre></div><h2 id=updating-commit-messages-after-pushing>Updating commit messages after pushing</h2>
+<p>If the message to be changed is for the latest commit to the repository, then the following commands are to be executed:</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=ln>1</span>git commit --amend -m <span class=s2>&#34;Updated message&#34;</span>
+<span class=ln>2</span>
+<span class=ln>3</span><span class=c1># using --force is not recommended unless you are absolutely sure that no one else has cloned your repository after the latest commit.</span>
+<span class=ln>4</span><span class=c1>#git push --force repository-name branch-name</span>
+<span class=ln>5</span><span class=c1># A safer alternative is to use:</span>
+<span class=ln>6</span>git push --force-with-lease repository-name branch-name
+</code></pre></div><p>If the message needs to be amended is an older commit:</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=ln>1</span><span class=c1># Use the git rebase -i HEAD~n command to display a list of the last n commits in your default text editor.</span>
+<span class=ln>2</span>git rebase -i HEAD~3 
+</code></pre></div><p>The list would be similiar to this:</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=ln> 1</span>pick e499d83 c message
+<span class=ln> 2</span>pick 0c39032 b message
+<span class=ln> 3</span>pick f7fde41 a message
+<span class=ln> 4</span>
+<span class=ln> 5</span># Rebase 9fdb3bd..f7fde4a onto 9fdb3bd
+<span class=ln> 6</span>#
+<span class=ln> 7</span># Commands:
+<span class=ln> 8</span># p, pick = use commit
+<span class=ln> 9</span># r, reword = use commit, but edit the commit message
+<span class=ln>10</span># e, edit = use commit, but stop for amending
+<span class=ln>11</span># s, squash = use commit, but meld into previous commit
+<span class=ln>12</span># f, fixup = like &#34;squash&#34;, but discard this commit&#39;s log message
+<span class=ln>13</span># x, exec = run command (the rest of the line) using shell
+<span class=ln>14</span>#
+<span class=ln>15</span># These lines can be re- ordered; they are executed from top to
+<span class=ln>16</span>bottom.
+<span class=ln>17</span>...
+</code></pre></div><p>Replace <code>pick</code> with <code>reword</code> before each commit message that needs to be changed:</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=ln>1</span>pick e499d83 updated c message
+<span class=ln>2</span>reword 0c39032 updated b message
+<span class=ln>3</span>reword f7fde41 updated a message
+</code></pre></div><p>Save and close the commit list file.</p>
+<p>Force push the amended commits:</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=ln>1</span>git push --force
 </code></pre></div><script src=https://utteranc.es/client.js repo=brightzheng100/brightzheng100.github.io issue-term=pathname label="utterances comments 💬" theme=github-light crossorigin=anonymous async></script>
 </article>
 <aside class=sidebar>
@@ -273,7 +310,7 @@ POST
 </a>
 <a href=https://brightzheng100.github.io/categories/diary/ class="post_tag button button_translucent" title=diary>
 DIARY
-<span class=button_tally>3</span>
+<span class=button_tally>4</span>
 </a>
 </nav>
 </div>
@@ -284,12 +321,12 @@ DIARY
 TUTORIAL
 <span class=button_tally>5</span>
 </a>
-<a href=https://brightzheng100.github.io/tags/hugo/ class="post_tag button button_translucent" title=hugo>
-HUGO
-<span class=button_tally>3</span>
-</a>
 <a href=https://brightzheng100.github.io/tags/tips/ class="post_tag button button_translucent" title=tips>
 TIPS
+<span class=button_tally>4</span>
+</a>
+<a href=https://brightzheng100.github.io/tags/hugo/ class="post_tag button button_translucent" title=hugo>
+HUGO
 <span class=button_tally>3</span>
 </a>
 <a href=https://brightzheng100.github.io/tags/deepdive/ class="post_tag button button_translucent" title=deepdive>
@@ -316,6 +353,10 @@ OPERATOR-FRAMEWORK
 OPERATOR-SDK
 <span class=button_tally>2</span>
 </a>
+<a href=https://brightzheng100.github.io/tags/brew/ class="post_tag button button_translucent" title=brew>
+BREW
+<span class=button_tally>1</span>
+</a>
 <a href=https://brightzheng100.github.io/tags/chrome/ class="post_tag button button_translucent" title=chrome>
 CHROME
 <span class=button_tally>1</span>
@@ -332,14 +373,12 @@ GEOLOCATION
 GIT
 <span class=button_tally>1</span>
 </a>
-<a href=https://brightzheng100.github.io/tags/googleanalytics/ class="post_tag button button_translucent" title=googleanalytics>
-GOOGLEANALYTICS
-<span class=button_tally>1</span>
-</a>
 <br>
 <div class="post_tags_toggle button">All Tags</div>
 <div class=post_tags>
 <div class=tags_list>
+<a href=https://brightzheng100.github.io/tags/brew/ class="post_tag button button_translucent" data-position=1 title=brew>BREW<span class=button_tally>1</span>
+</a>
 <a href=https://brightzheng100.github.io/tags/chrome/ class="post_tag button button_translucent" data-position=1 title=chrome>CHROME<span class=button_tally>1</span>
 </a>
 <a href=https://brightzheng100.github.io/tags/clarity/ class="post_tag button button_translucent" data-position=1 title=clarity>CLARITY<span class=button_tally>1</span>
@@ -358,7 +397,11 @@ GOOGLEANALYTICS
 </a>
 <a href=https://brightzheng100.github.io/tags/integration/ class="post_tag button button_translucent" data-position=1 title=integration>INTEGRATION<span class=button_tally>1</span>
 </a>
+<a href=https://brightzheng100.github.io/tags/java/ class="post_tag button button_translucent" data-position=1 title=java>JAVA<span class=button_tally>1</span>
+</a>
 <a href=https://brightzheng100.github.io/tags/kubernetes/ class="post_tag button button_translucent" data-position=2 title=kubernetes>KUBERNETES<span class=button_tally>2</span>
+</a>
+<a href=https://brightzheng100.github.io/tags/macos/ class="post_tag button button_translucent" data-position=1 title=macos>MACOS<span class=button_tally>1</span>
 </a>
 <a href=https://brightzheng100.github.io/tags/operator/ class="post_tag button button_translucent" data-position=2 title=operator>OPERATOR<span class=button_tally>2</span>
 </a>
@@ -378,7 +421,7 @@ GOOGLEANALYTICS
 </a>
 <a href=https://brightzheng100.github.io/tags/tech/ class="post_tag button button_translucent" data-position=1 title=tech>TECH<span class=button_tally>1</span>
 </a>
-<a href=https://brightzheng100.github.io/tags/tips/ class="post_tag button button_translucent" data-position=3 title=tips>TIPS<span class=button_tally>3</span>
+<a href=https://brightzheng100.github.io/tags/tips/ class="post_tag button button_translucent" data-position=4 title=tips>TIPS<span class=button_tally>4</span>
 </a>
 <a href=https://brightzheng100.github.io/tags/tutorial/ class="post_tag button button_translucent" data-position=5 title=tutorial>TUTORIAL<span class=button_tally>5</span>
 </a>

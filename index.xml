@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>The future is Bright</title><link>https://brightzheng100.github.io/</link><description>Recent content on The future is Bright</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2021 Bright Zheg. All Rights Reserved.</copyright><lastBuildDate>Sun, 20 Jun 2021 17:34:17 +0800</lastBuildDate><atom:link href="https://brightzheng100.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Contributing to OSS Projects With Git Practices, Part 1</title><link>https://brightzheng100.github.io/post/2021/06/contributing-to-oss-projects-with-git-practices-part-1/</link><pubDate>Sun, 20 Jun 2021 17:34:17 +0800</pubDate><guid>https://brightzheng100.github.io/post/2021/06/contributing-to-oss-projects-with-git-practices-part-1/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>The future is Bright</title><link>https://brightzheng100.github.io/</link><description>Recent content on The future is Bright</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2021 Bright Zheg. All Rights Reserved.</copyright><lastBuildDate>Fri, 03 Sep 2021 21:09:34 +0800</lastBuildDate><atom:link href="https://brightzheng100.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Contributing to OSS Projects With Git Practices, Part 1</title><link>https://brightzheng100.github.io/post/2021/06/contributing-to-oss-projects-with-git-practices-part-1/</link><pubDate>Sun, 20 Jun 2021 17:34:17 +0800</pubDate><guid>https://brightzheng100.github.io/post/2021/06/contributing-to-oss-projects-with-git-practices-part-1/</guid><description>
 &lt;hr>
 &lt;p>I'm a big fan of contributing back to the OSS community while learning and/or engaging OSS projects, which can be &lt;a href="https://github.com/concourse/concourse-bosh-deployment/pulls?q=is%3Apr+%22%40brightzheng100%22">Concourse&lt;/a>, &lt;a href="https://github.com/minio/minio-boshrelease/pulls?q=is%3Apr+%22%40brightzheng100%22">MinIO&lt;/a>, &lt;a href="https://github.com/kubernetes-sigs/multi-tenancy/pulls?q=is%3Apr+%22%40brightzheng100%22">Kubernetes&lt;/a> and more.&lt;/p>
 &lt;p>And Git will always play a big part of it, as a collaboration platform for issues and pull requests (PRs).&lt;/p>
@@ -121,6 +121,42 @@
 &lt;span class="ln">12&lt;/span>
 &lt;span class="ln">13&lt;/span>&lt;span class="c1"># Force push to origin/master&lt;/span>
 &lt;span class="ln">14&lt;/span>git push --force-with-lease origin master
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="updating-commit-messages-after-pushing">Updating commit messages after pushing&lt;/h2>
+&lt;p>If the message to be changed is for the latest commit to the repository, then the following commands are to be executed:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>git commit --amend -m &lt;span class="s2">&amp;#34;Updated message&amp;#34;&lt;/span>
+&lt;span class="ln">2&lt;/span>
+&lt;span class="ln">3&lt;/span>&lt;span class="c1"># using --force is not recommended unless you are absolutely sure that no one else has cloned your repository after the latest commit.&lt;/span>
+&lt;span class="ln">4&lt;/span>&lt;span class="c1">#git push --force repository-name branch-name&lt;/span>
+&lt;span class="ln">5&lt;/span>&lt;span class="c1"># A safer alternative is to use:&lt;/span>
+&lt;span class="ln">6&lt;/span>git push --force-with-lease repository-name branch-name
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>If the message needs to be amended is an older commit:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>&lt;span class="c1"># Use the git rebase -i HEAD~n command to display a list of the last n commits in your default text editor.&lt;/span>
+&lt;span class="ln">2&lt;/span>git rebase -i HEAD~3
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>The list would be similiar to this:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln"> 1&lt;/span>pick e499d83 c message
+&lt;span class="ln"> 2&lt;/span>pick 0c39032 b message
+&lt;span class="ln"> 3&lt;/span>pick f7fde41 a message
+&lt;span class="ln"> 4&lt;/span>
+&lt;span class="ln"> 5&lt;/span># Rebase 9fdb3bd..f7fde4a onto 9fdb3bd
+&lt;span class="ln"> 6&lt;/span>#
+&lt;span class="ln"> 7&lt;/span># Commands:
+&lt;span class="ln"> 8&lt;/span># p, pick = use commit
+&lt;span class="ln"> 9&lt;/span># r, reword = use commit, but edit the commit message
+&lt;span class="ln">10&lt;/span># e, edit = use commit, but stop for amending
+&lt;span class="ln">11&lt;/span># s, squash = use commit, but meld into previous commit
+&lt;span class="ln">12&lt;/span># f, fixup = like &amp;#34;squash&amp;#34;, but discard this commit&amp;#39;s log message
+&lt;span class="ln">13&lt;/span># x, exec = run command (the rest of the line) using shell
+&lt;span class="ln">14&lt;/span>#
+&lt;span class="ln">15&lt;/span># These lines can be re- ordered; they are executed from top to
+&lt;span class="ln">16&lt;/span>bottom.
+&lt;span class="ln">17&lt;/span>...
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Replace &lt;code>pick&lt;/code> with &lt;code>reword&lt;/code> before each commit message that needs to be changed:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>pick e499d83 updated c message
+&lt;span class="ln">2&lt;/span>reword 0c39032 updated b message
+&lt;span class="ln">3&lt;/span>reword f7fde41 updated a message
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Save and close the commit list file.&lt;/p>
+&lt;p>Force push the amended commits:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>git push --force
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Diving Deeper Into Operator Framework, Part 2</title><link>https://brightzheng100.github.io/post/2021/06/diving-deeper-into-operator-framework-part-2/</link><pubDate>Sun, 06 Jun 2021 11:55:46 +0800</pubDate><guid>https://brightzheng100.github.io/post/2021/06/diving-deeper-into-operator-framework-part-2/</guid><description>
 &lt;hr>
 &lt;p>This is the part 2 of my blog series about operator frameworks deep-dive.&lt;/p>
