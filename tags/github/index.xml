@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GitHub on The future is Bright</title><link>https://brightzheng100.github.io/tags/github/</link><description>Recent content in GitHub on The future is Bright</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2021 Bright Zheg. All Rights Reserved.</copyright><lastBuildDate>Sun, 23 May 2021 22:27:49 +0800</lastBuildDate><atom:link href="https://brightzheng100.github.io/tags/github/index.xml" rel="self" type="application/rss+xml"/><item><title>Adding Comments Into Hugo Powered Website</title><link>https://brightzheng100.github.io/post/2021/05/adding-comments-into-hugo-powered-website/</link><pubDate>Sun, 23 May 2021 22:27:49 +0800</pubDate><guid>https://brightzheng100.github.io/post/2021/05/adding-comments-into-hugo-powered-website/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GitHub on The future is Bright</title><link>https://brightzheng100.github.io/tags/github/</link><description>Recent content in GitHub on The future is Bright</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>Copyright © 2021 Bright Zheg. All Rights Reserved.</copyright><lastBuildDate>Sun, 23 May 2021 22:27:49 +0800</lastBuildDate><atom:link href="https://brightzheng100.github.io/tags/github/index.xml" rel="self" type="application/rss+xml"/><item><title>Adding Comments Into Hugo Powered Website</title><link>https://brightzheng100.github.io/post/2021/05/adding-comments-into-hugo-powered-website/</link><pubDate>Sun, 23 May 2021 22:27:49 +0800</pubDate><guid>https://brightzheng100.github.io/post/2021/05/adding-comments-into-hugo-powered-website/</guid><description>
 &lt;p>Having a comment system integrated with our blogging system is obviously interesting and fun, even for a low traffic blogging website like mine:)&lt;/p>
 &lt;p>But when it comes with some constraints, like:&lt;/p>
 &lt;ul>
@@ -8,11 +8,11 @@
 &lt;p>This can be interesting and let's implement that with the recommended &lt;a href="https://utteranc.es/">utteranc&lt;/a>.&lt;/p>
 &lt;h2 id="how-it-works">How it works&lt;/h2>
 &lt;p>According to &lt;a href="https://utteranc.es/">utteranc&lt;/a>'s website:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>When Utterances loads, the GitHub issue search API is used to find the issue
-&lt;span class="ln">2&lt;/span>associated with the page based on url, pathname or title.
-&lt;span class="ln">3&lt;/span>If we cannot find an issue that matches the page, no problem,
-&lt;span class="ln">4&lt;/span>utterances-bot will automatically create an issue the first time someone comments.
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>So &lt;code>utteranc&lt;/code> makes use of GitHub's issue system and turns issues into comments, which is super smart and cool.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="ln">1&lt;/span>&lt;span class="cl">When Utterances loads, the GitHub issue search API is used to find the issue
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">2&lt;/span>&lt;span class="cl">associated with the page based on url, pathname or title.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">3&lt;/span>&lt;span class="cl">If we cannot find an issue that matches the page, no problem,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">4&lt;/span>&lt;span class="cl">utterances-bot will automatically create an issue the first time someone comments.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>So &lt;code>utteranc&lt;/code> makes use of GitHub's issue system and turns issues into comments, which is super smart and cool.&lt;/p>
 &lt;h2 id="coniguration">Coniguration&lt;/h2>
 &lt;p>The &lt;a href="https://utteranc.es/">utteranc&lt;/a>'s website offers a simple form for us to fill up in order to generate the configuration.&lt;/p>
 &lt;p>What we need is to prepare some simple info:&lt;/p>
@@ -23,29 +23,29 @@
 &lt;li>Theme, let's pick the default option: &lt;strong>GitHub Light&lt;/strong>&lt;/li>
 &lt;/ul>
 &lt;p>Now it will automatically help us generate the scripts:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-js" data-lang="js">&lt;span class="ln">1&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="nx">script&lt;/span> &lt;span class="nx">src&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;https://utteranc.es/client.js&amp;#34;&lt;/span>
-&lt;span class="ln">2&lt;/span> &lt;span class="nx">repo&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;brightzheng100/brightzheng100.github.io&amp;#34;&lt;/span>
-&lt;span class="ln">3&lt;/span> &lt;span class="nx">issue&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">term&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;pathname&amp;#34;&lt;/span>
-&lt;span class="ln">4&lt;/span> &lt;span class="nx">label&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;utterances comments 💬&amp;#34;&lt;/span>
-&lt;span class="ln">5&lt;/span> &lt;span class="nx">theme&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;github-light&amp;#34;&lt;/span>
-&lt;span class="ln">6&lt;/span> &lt;span class="nx">crossorigin&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;anonymous&amp;#34;&lt;/span>
-&lt;span class="ln">7&lt;/span> &lt;span class="kr">async&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>
-&lt;span class="ln">8&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="err">/script&amp;gt;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="integrate-it-with-hugo-website">Integrate it with Hugo website&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-js" data-lang="js">&lt;span class="line">&lt;span class="ln">1&lt;/span>&lt;span class="cl">&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="nx">script&lt;/span> &lt;span class="nx">src&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;https://utteranc.es/client.js&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">2&lt;/span>&lt;span class="cl"> &lt;span class="nx">repo&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;brightzheng100/brightzheng100.github.io&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">3&lt;/span>&lt;span class="cl"> &lt;span class="nx">issue&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">term&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;pathname&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">4&lt;/span>&lt;span class="cl"> &lt;span class="nx">label&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;utterances comments 💬&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">5&lt;/span>&lt;span class="cl"> &lt;span class="nx">theme&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;github-light&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">6&lt;/span>&lt;span class="cl"> &lt;span class="nx">crossorigin&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;anonymous&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">7&lt;/span>&lt;span class="cl"> &lt;span class="kr">async&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">8&lt;/span>&lt;span class="cl">&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="err">/script&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="integrate-it-with-hugo-website">Integrate it with Hugo website&lt;/h2>
 &lt;p>Create &lt;code>layouts/partials/comments.html&lt;/code> containing above scripts generated by &lt;code>utteranc&lt;/code>.&lt;/p>
 &lt;p>For example:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>$ mkdir -p layouts/partials
-&lt;span class="ln"> 2&lt;/span>$ cat &amp;gt; layouts/partials/comments.html &lt;span class="s">&amp;lt;&amp;lt; EOF
-&lt;/span>&lt;span class="ln"> 3&lt;/span>&lt;span class="s">&amp;lt;script src=&amp;#34;https://utteranc.es/client.js&amp;#34;
-&lt;/span>&lt;span class="ln"> 4&lt;/span>&lt;span class="s"> repo=&amp;#34;brightzheng100/brightzheng100.github.io&amp;#34;
-&lt;/span>&lt;span class="ln"> 5&lt;/span>&lt;span class="s"> issue-term=&amp;#34;pathname&amp;#34;
-&lt;/span>&lt;span class="ln"> 6&lt;/span>&lt;span class="s"> label=&amp;#34;utterances comments 💬&amp;#34;
-&lt;/span>&lt;span class="ln"> 7&lt;/span>&lt;span class="s"> theme=&amp;#34;github-light&amp;#34;
-&lt;/span>&lt;span class="ln"> 8&lt;/span>&lt;span class="s"> crossorigin=&amp;#34;anonymous&amp;#34;
-&lt;/span>&lt;span class="ln"> 9&lt;/span>&lt;span class="s"> async&amp;gt;
-&lt;/span>&lt;span class="ln">10&lt;/span>&lt;span class="s">&amp;lt;/script&amp;gt;
-&lt;/span>&lt;span class="ln">11&lt;/span>&lt;span class="s">EOF&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="install-the-utterances-app">Install the utterances app&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="ln"> 1&lt;/span>&lt;span class="cl">$ mkdir -p layouts/partials
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 2&lt;/span>&lt;span class="cl">$ cat &amp;gt; layouts/partials/comments.html &lt;span class="s">&amp;lt;&amp;lt; EOF
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 3&lt;/span>&lt;span class="cl">&lt;span class="s">&amp;lt;script src=&amp;#34;https://utteranc.es/client.js&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 4&lt;/span>&lt;span class="cl">&lt;span class="s"> repo=&amp;#34;brightzheng100/brightzheng100.github.io&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 5&lt;/span>&lt;span class="cl">&lt;span class="s"> issue-term=&amp;#34;pathname&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 6&lt;/span>&lt;span class="cl">&lt;span class="s"> label=&amp;#34;utterances comments 💬&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 7&lt;/span>&lt;span class="cl">&lt;span class="s"> theme=&amp;#34;github-light&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 8&lt;/span>&lt;span class="cl">&lt;span class="s"> crossorigin=&amp;#34;anonymous&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 9&lt;/span>&lt;span class="cl">&lt;span class="s"> async&amp;gt;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">10&lt;/span>&lt;span class="cl">&lt;span class="s">&amp;lt;/script&amp;gt;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">11&lt;/span>&lt;span class="cl">&lt;span class="s">EOF&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="install-the-utterances-app">Install the utterances app&lt;/h2>
 &lt;p>Make sure the utterances app is installed on the repo, otherwise users will not be able to post comments.&lt;/p>
 &lt;p>Navigate to &lt;a href="https://github.com/apps/utterances">here&lt;/a>, click the &lt;strong>Install&lt;/strong> button and follow through the installation guide.&lt;/p>
 &lt;p>Make sure you grant it only to your blog website, for example, mine is: brightzheng100/brightzheng100.github.io&lt;/p>
@@ -69,97 +69,97 @@
 &lt;li>&lt;code>Git&lt;/code> is installed&lt;/li>
 &lt;li>&lt;code>brew&lt;/code> is installed&lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span># Install hugo
-&lt;span class="ln">2&lt;/span>$ brew install hugo
-&lt;span class="ln">3&lt;/span>
-&lt;span class="ln">4&lt;/span># Check
-&lt;span class="ln">5&lt;/span>$ hugo version
-&lt;span class="ln">6&lt;/span>hugo v0.83.1+extended darwin/amd64 BuildDate=unknown
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-2-create-a-new-site">Step 2: Create a New Site&lt;/h2>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>$ hugo new site brightzheng100
-&lt;span class="ln"> 2&lt;/span>Congratulations! Your new Hugo site is created in /Users/brightzheng/development/blog/brightzheng100.
-&lt;span class="ln"> 3&lt;/span>
-&lt;span class="ln"> 4&lt;/span>Just a few more steps and you are ready to go:
-&lt;span class="ln"> 5&lt;/span>
-&lt;span class="ln"> 6&lt;/span>1. Download a theme into the same-named folder.
-&lt;span class="ln"> 7&lt;/span> Choose a theme from https://themes.gohugo.io/ or
-&lt;span class="ln"> 8&lt;/span> create your own with the &lt;span class="s2">&amp;#34;hugo new theme &amp;lt;THEMENAME&amp;gt;&amp;#34;&lt;/span> command.
-&lt;span class="ln"> 9&lt;/span>2. Perhaps you want to add some content. You can add single files
-&lt;span class="ln">10&lt;/span> with &lt;span class="s2">&amp;#34;hugo new &amp;lt;SECTIONNAME&amp;gt;/&amp;lt;FILENAME&amp;gt;.&amp;lt;FORMAT&amp;gt;&amp;#34;&lt;/span>.
-&lt;span class="ln">11&lt;/span>3. Start the built-in live server via &lt;span class="s2">&amp;#34;hugo server&amp;#34;&lt;/span>.
-&lt;span class="ln">12&lt;/span>
-&lt;span class="ln">13&lt;/span>Visit https://gohugo.io/ &lt;span class="k">for&lt;/span> quickstart guide and full documentation.
-&lt;span class="ln">14&lt;/span>
-&lt;span class="ln">15&lt;/span>$ &lt;span class="nb">cd&lt;/span> brightzheng100
-&lt;span class="ln">16&lt;/span>$ git init
-&lt;span class="ln">17&lt;/span>Initialized empty Git repository in /Users/brightzheng/development/blog/brightzheng100/.git/
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-3-add-a-theme">Step 3: Add a Theme&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="ln">1&lt;/span>&lt;span class="cl"># Install hugo
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">2&lt;/span>&lt;span class="cl">$ brew install hugo
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">3&lt;/span>&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">4&lt;/span>&lt;span class="cl"># Check
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">5&lt;/span>&lt;span class="cl">$ hugo version
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">6&lt;/span>&lt;span class="cl">hugo v0.83.1+extended darwin/amd64 BuildDate=unknown
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-2-create-a-new-site">Step 2: Create a New Site&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="ln"> 1&lt;/span>&lt;span class="cl">$ hugo new site brightzheng100
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 2&lt;/span>&lt;span class="cl">Congratulations! Your new Hugo site is created in /Users/brightzheng/development/blog/brightzheng100.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 3&lt;/span>&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 4&lt;/span>&lt;span class="cl">Just a few more steps and you are ready to go:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 5&lt;/span>&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 6&lt;/span>&lt;span class="cl">1. Download a theme into the same-named folder.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 7&lt;/span>&lt;span class="cl"> Choose a theme from https://themes.gohugo.io/ or
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 8&lt;/span>&lt;span class="cl"> create your own with the &lt;span class="s2">&amp;#34;hugo new theme &amp;lt;THEMENAME&amp;gt;&amp;#34;&lt;/span> command.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 9&lt;/span>&lt;span class="cl">2. Perhaps you want to add some content. You can add single files
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">10&lt;/span>&lt;span class="cl"> with &lt;span class="s2">&amp;#34;hugo new &amp;lt;SECTIONNAME&amp;gt;/&amp;lt;FILENAME&amp;gt;.&amp;lt;FORMAT&amp;gt;&amp;#34;&lt;/span>.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">11&lt;/span>&lt;span class="cl">3. Start the built-in live server via &lt;span class="s2">&amp;#34;hugo server&amp;#34;&lt;/span>.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">12&lt;/span>&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">13&lt;/span>&lt;span class="cl">Visit https://gohugo.io/ &lt;span class="k">for&lt;/span> quickstart guide and full documentation.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">14&lt;/span>&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">15&lt;/span>&lt;span class="cl">$ &lt;span class="nb">cd&lt;/span> brightzheng100
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">16&lt;/span>&lt;span class="cl">$ git init
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">17&lt;/span>&lt;span class="cl">Initialized empty Git repository in /Users/brightzheng/development/blog/brightzheng100/.git/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-3-add-a-theme">Step 3: Add a Theme&lt;/h2>
 &lt;p>Pick your prefered theme from here: &lt;a href="https://themes.gohugo.io/">https://themes.gohugo.io/&lt;/a>.
 This is the one I picked: &lt;a href="https://themes.gohugo.io/hugo-clarity/">https://themes.gohugo.io/hugo-clarity/&lt;/a>&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>&lt;span class="c1"># Clone it as a sub module&lt;/span>
-&lt;span class="ln"> 2&lt;/span>$ git submodule add https://github.com/chipzoller/hugo-clarity themes/clarity
-&lt;span class="ln"> 3&lt;/span>Cloning into &lt;span class="s1">&amp;#39;/Users/brightzheng/development/blog/brightzheng100/themes/clarity&amp;#39;&lt;/span>...
-&lt;span class="ln"> 4&lt;/span>remote: Enumerating objects: 3126, &lt;span class="k">done&lt;/span>.
-&lt;span class="ln"> 5&lt;/span>remote: Counting objects: 100% &lt;span class="o">(&lt;/span>285/285&lt;span class="o">)&lt;/span>, &lt;span class="k">done&lt;/span>.
-&lt;span class="ln"> 6&lt;/span>remote: Compressing objects: 100% &lt;span class="o">(&lt;/span>125/125&lt;span class="o">)&lt;/span>, &lt;span class="k">done&lt;/span>.
-&lt;span class="ln"> 7&lt;/span>remote: Total &lt;span class="m">3126&lt;/span> &lt;span class="o">(&lt;/span>delta 150&lt;span class="o">)&lt;/span>, reused &lt;span class="m">249&lt;/span> &lt;span class="o">(&lt;/span>delta 136&lt;span class="o">)&lt;/span>, pack-reused &lt;span class="m">2841&lt;/span>
-&lt;span class="ln"> 8&lt;/span>Receiving objects: 100% &lt;span class="o">(&lt;/span>3126/3126&lt;span class="o">)&lt;/span>, 5.15 MiB &lt;span class="p">|&lt;/span> 8.37 MiB/s, &lt;span class="k">done&lt;/span>.
-&lt;span class="ln"> 9&lt;/span>Resolving deltas: 100% &lt;span class="o">(&lt;/span>1809/1809&lt;span class="o">)&lt;/span>, &lt;span class="k">done&lt;/span>.
-&lt;span class="ln">10&lt;/span>
-&lt;span class="ln">11&lt;/span>&lt;span class="c1"># Copy or move over the sample site&lt;/span>
-&lt;span class="ln">12&lt;/span>$ ls
-&lt;span class="ln">13&lt;/span>archetypes config.toml content data layouts static themes
-&lt;span class="ln">14&lt;/span>$ ls themes/clarity/exampleSite/
-&lt;span class="ln">15&lt;/span>archetypes config content layouts LICENSE README.md resources stati
-&lt;span class="ln">16&lt;/span>$ cp -a themes/clarity/exampleSite/* .
-&lt;span class="ln">17&lt;/span>$ ls
-&lt;span class="ln">18&lt;/span>archetypes config config.toml content data layouts LICENSE README.md resources static themes
-&lt;span class="ln">19&lt;/span>
-&lt;span class="ln">20&lt;/span>&lt;span class="c1"># Enable the theme&lt;/span>
-&lt;span class="ln">21&lt;/span>$ &lt;span class="nb">echo&lt;/span> &lt;span class="nv">theme&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="se">\&amp;#34;&lt;/span>clarity&lt;span class="se">\&amp;#34;&lt;/span> &amp;gt;&amp;gt; config.toml
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-4-add-some-content">Step 4: Add Some Content&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="ln"> 1&lt;/span>&lt;span class="cl">&lt;span class="c1"># Clone it as a sub module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 2&lt;/span>&lt;span class="cl">$ git submodule add https://github.com/chipzoller/hugo-clarity themes/clarity
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 3&lt;/span>&lt;span class="cl">Cloning into &lt;span class="s1">&amp;#39;/Users/brightzheng/development/blog/brightzheng100/themes/clarity&amp;#39;&lt;/span>...
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 4&lt;/span>&lt;span class="cl">remote: Enumerating objects: 3126, &lt;span class="k">done&lt;/span>.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 5&lt;/span>&lt;span class="cl">remote: Counting objects: 100% &lt;span class="o">(&lt;/span>285/285&lt;span class="o">)&lt;/span>, &lt;span class="k">done&lt;/span>.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 6&lt;/span>&lt;span class="cl">remote: Compressing objects: 100% &lt;span class="o">(&lt;/span>125/125&lt;span class="o">)&lt;/span>, &lt;span class="k">done&lt;/span>.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 7&lt;/span>&lt;span class="cl">remote: Total &lt;span class="m">3126&lt;/span> &lt;span class="o">(&lt;/span>delta 150&lt;span class="o">)&lt;/span>, reused &lt;span class="m">249&lt;/span> &lt;span class="o">(&lt;/span>delta 136&lt;span class="o">)&lt;/span>, pack-reused &lt;span class="m">2841&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 8&lt;/span>&lt;span class="cl">Receiving objects: 100% &lt;span class="o">(&lt;/span>3126/3126&lt;span class="o">)&lt;/span>, 5.15 MiB &lt;span class="p">|&lt;/span> 8.37 MiB/s, &lt;span class="k">done&lt;/span>.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 9&lt;/span>&lt;span class="cl">Resolving deltas: 100% &lt;span class="o">(&lt;/span>1809/1809&lt;span class="o">)&lt;/span>, &lt;span class="k">done&lt;/span>.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">10&lt;/span>&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">11&lt;/span>&lt;span class="cl">&lt;span class="c1"># Copy or move over the sample site&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">12&lt;/span>&lt;span class="cl">$ ls
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">13&lt;/span>&lt;span class="cl">archetypes config.toml content data layouts static themes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">14&lt;/span>&lt;span class="cl">$ ls themes/clarity/exampleSite/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">15&lt;/span>&lt;span class="cl">archetypes config content layouts LICENSE README.md resources stati
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">16&lt;/span>&lt;span class="cl">$ cp -a themes/clarity/exampleSite/* .
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">17&lt;/span>&lt;span class="cl">$ ls
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">18&lt;/span>&lt;span class="cl">archetypes config config.toml content data layouts LICENSE README.md resources static themes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">19&lt;/span>&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">20&lt;/span>&lt;span class="cl">&lt;span class="c1"># Enable the theme&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">21&lt;/span>&lt;span class="cl">$ &lt;span class="nb">echo&lt;/span> &lt;span class="nv">theme&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="se">\&amp;#34;&lt;/span>clarity&lt;span class="se">\&amp;#34;&lt;/span> &amp;gt;&amp;gt; config.toml
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-4-add-some-content">Step 4: Add Some Content&lt;/h2>
 &lt;p>You can manually create content files (for example as content/&lt;CATEGORY>/&lt;FILE>.&lt;FORMAT>) and provide metadata in them, however you can use the new command to do a few things for you (like add title and date):&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ hugo new post/getting-started.md
-&lt;span class="ln">2&lt;/span>/Users/brightzheng/development/blog/brightzheng100/content/post/getting-started.md created
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-5-start-the-hugo-server">Step 5: Start the Hugo server&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="ln">1&lt;/span>&lt;span class="cl">$ hugo new post/getting-started.md
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">2&lt;/span>&lt;span class="cl">/Users/brightzheng/development/blog/brightzheng100/content/post/getting-started.md created
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-5-start-the-hugo-server">Step 5: Start the Hugo server&lt;/h2>
 &lt;p>Now, start the Hugo server with drafts enabled:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>$ hugo server -D
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-6-customize-the-theme">Step 6: Customize the Theme&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="ln">1&lt;/span>&lt;span class="cl">$ hugo server -D
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-6-customize-the-theme">Step 6: Customize the Theme&lt;/h2>
 &lt;p>Your new site already looks great, but you will want to tweak it a little before you release it to the public.&lt;/p>
 &lt;p>Open up config.toml in a text editor:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>baseURL = &amp;#34;https://example.org/&amp;#34;
-&lt;span class="ln">2&lt;/span>languageCode = &amp;#34;en-us&amp;#34;
-&lt;span class="ln">3&lt;/span>title = &amp;#34;My New Hugo Site&amp;#34;
-&lt;span class="ln">4&lt;/span>theme = &amp;#34;ananke&amp;#34;
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-7-build-static-pages">Step 7: Build static pages&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="ln">1&lt;/span>&lt;span class="cl">baseURL = &amp;#34;https://example.org/&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">2&lt;/span>&lt;span class="cl">languageCode = &amp;#34;en-us&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">3&lt;/span>&lt;span class="cl">title = &amp;#34;My New Hugo Site&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">4&lt;/span>&lt;span class="cl">theme = &amp;#34;ananke&amp;#34;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="step-7-build-static-pages">Step 7: Build static pages&lt;/h2>
 &lt;p>It is simple. Just call:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>hugo -D
-&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="ln">1&lt;/span>&lt;span class="cl">hugo -D
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
 &lt;p>Note: Output will be in ./public/ directory by default (-d/--destination flag to change it, or set publishdir in the config file).&lt;/p>
 &lt;/blockquote>
 &lt;h2 id="step-8-further-customization">Step 8: Further Customization&lt;/h2>
 &lt;h3 id="language">Language&lt;/h3>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>/config/languages.toml
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>What I've done:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="ln">1&lt;/span>&lt;span class="cl">/config/languages.toml
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>What I've done:&lt;/p>
 &lt;ul>
 &lt;li>Updated the supported languages with English only for now&lt;/li>
 &lt;/ul>
 &lt;h3 id="menu">Menu&lt;/h3>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>/config/_default/menu.en.toml
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>What I've done:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="ln">1&lt;/span>&lt;span class="cl">/config/_default/menu.en.toml
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>What I've done:&lt;/p>
 &lt;ul>
 &lt;li>Refined the menu items&lt;/li>
 &lt;/ul>
 &lt;h3 id="params">Params&lt;/h3>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>/config/_default/params.toml
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>What I've done:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="ln">1&lt;/span>&lt;span class="cl">/config/_default/params.toml
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>What I've done:&lt;/p>
 &lt;ul>
 &lt;li>Changed the params by following the comments&lt;/li>
 &lt;li>Major changes including &lt;code>introDescription&lt;/code>, &lt;code>mainSections&lt;/code>, &lt;code>logo&lt;/code>, &lt;code>footerLogo&lt;/code>, &lt;code>iconsDir&lt;/code> etc.&lt;/li>
 &lt;/ul>
 &lt;h3 id="archetypes">archetypes&lt;/h3>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="ln">1&lt;/span>/archetypes
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>What I've done:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="ln">1&lt;/span>&lt;span class="cl">/archetypes
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>What I've done:&lt;/p>
 &lt;ul>
 &lt;li>added &lt;code>diary.md&lt;/code>&lt;/li>
 &lt;li>and updated all these &amp;quot;templates&amp;quot;&lt;/li>
@@ -188,51 +188,51 @@ Created a new folder named &lt;code>icons&lt;/code> under &lt;code>/static&lt;/c
 &lt;p>Add &lt;code>.github/workflows/gh-pages.yml&lt;/code> to enable GitHub Actions:&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln"> 1&lt;/span>mkdir -p .github/workflows
-&lt;span class="ln"> 2&lt;/span>
-&lt;span class="ln"> 3&lt;/span>cat &amp;gt; .github/workflows/gh-pages.yml &lt;span class="s">&amp;lt;&amp;lt;&amp;#39;EOF&amp;#39;
-&lt;/span>&lt;span class="ln"> 4&lt;/span>&lt;span class="s">name: Hugo Website Generator
-&lt;/span>&lt;span class="ln"> 5&lt;/span>&lt;span class="s">
-&lt;/span>&lt;span class="ln"> 6&lt;/span>&lt;span class="s">on:
-&lt;/span>&lt;span class="ln"> 7&lt;/span>&lt;span class="s"> push:
-&lt;/span>&lt;span class="ln"> 8&lt;/span>&lt;span class="s"> branches:
-&lt;/span>&lt;span class="ln"> 9&lt;/span>&lt;span class="s"> - main # Note: I&amp;#39;m using main branch in my private repo
-&lt;/span>&lt;span class="ln">10&lt;/span>&lt;span class="s">
-&lt;/span>&lt;span class="ln">11&lt;/span>&lt;span class="s">jobs:
-&lt;/span>&lt;span class="ln">12&lt;/span>&lt;span class="s"> deploy:
-&lt;/span>&lt;span class="ln">13&lt;/span>&lt;span class="s"> runs-on: ubuntu-20.04
-&lt;/span>&lt;span class="ln">14&lt;/span>&lt;span class="s"> steps:
-&lt;/span>&lt;span class="ln">15&lt;/span>&lt;span class="s"> - uses: actions/checkout@v2
-&lt;/span>&lt;span class="ln">16&lt;/span>&lt;span class="s"> with:
-&lt;/span>&lt;span class="ln">17&lt;/span>&lt;span class="s"> submodules: true # Fetch Hugo themes (true OR recursive)
-&lt;/span>&lt;span class="ln">18&lt;/span>&lt;span class="s"> fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
-&lt;/span>&lt;span class="ln">19&lt;/span>&lt;span class="s">
-&lt;/span>&lt;span class="ln">20&lt;/span>&lt;span class="s"> - name: Setup Hugo
-&lt;/span>&lt;span class="ln">21&lt;/span>&lt;span class="s"> uses: peaceiris/actions-hugo@v2
-&lt;/span>&lt;span class="ln">22&lt;/span>&lt;span class="s"> with:
-&lt;/span>&lt;span class="ln">23&lt;/span>&lt;span class="s"> hugo-version: &amp;#39;latest&amp;#39;
-&lt;/span>&lt;span class="ln">24&lt;/span>&lt;span class="s">
-&lt;/span>&lt;span class="ln">25&lt;/span>&lt;span class="s"> - name: Build
-&lt;/span>&lt;span class="ln">26&lt;/span>&lt;span class="s"> run: hugo --minify
-&lt;/span>&lt;span class="ln">27&lt;/span>&lt;span class="s">
-&lt;/span>&lt;span class="ln">28&lt;/span>&lt;span class="s"> - name: Deploy
-&lt;/span>&lt;span class="ln">29&lt;/span>&lt;span class="s"> uses: peaceiris/actions-gh-pages@v3
-&lt;/span>&lt;span class="ln">30&lt;/span>&lt;span class="s"> if: github.ref == &amp;#39;refs/heads/main&amp;#39;
-&lt;/span>&lt;span class="ln">31&lt;/span>&lt;span class="s"> with:
-&lt;/span>&lt;span class="ln">32&lt;/span>&lt;span class="s"> personal_token: ${{ secrets.TOKEN }}
-&lt;/span>&lt;span class="ln">33&lt;/span>&lt;span class="s"> external_repository: brightzheng100/brightzheng100.github.io
-&lt;/span>&lt;span class="ln">34&lt;/span>&lt;span class="s"> publish_branch: master
-&lt;/span>&lt;span class="ln">35&lt;/span>&lt;span class="s"> publish_dir: ./public
-&lt;/span>&lt;span class="ln">36&lt;/span>&lt;span class="s">EOF&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="5">
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="ln"> 1&lt;/span>&lt;span class="cl">mkdir -p .github/workflows
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 2&lt;/span>&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 3&lt;/span>&lt;span class="cl">cat &amp;gt; .github/workflows/gh-pages.yml &lt;span class="s">&amp;lt;&amp;lt;&amp;#39;EOF&amp;#39;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 4&lt;/span>&lt;span class="cl">&lt;span class="s">name: Hugo Website Generator
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 5&lt;/span>&lt;span class="cl">&lt;span class="s">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 6&lt;/span>&lt;span class="cl">&lt;span class="s">on:
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 7&lt;/span>&lt;span class="cl">&lt;span class="s"> push:
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 8&lt;/span>&lt;span class="cl">&lt;span class="s"> branches:
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 9&lt;/span>&lt;span class="cl">&lt;span class="s"> - main # Note: I&amp;#39;m using main branch in my private repo
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">10&lt;/span>&lt;span class="cl">&lt;span class="s">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">11&lt;/span>&lt;span class="cl">&lt;span class="s">jobs:
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">12&lt;/span>&lt;span class="cl">&lt;span class="s"> deploy:
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">13&lt;/span>&lt;span class="cl">&lt;span class="s"> runs-on: ubuntu-20.04
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">14&lt;/span>&lt;span class="cl">&lt;span class="s"> steps:
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">15&lt;/span>&lt;span class="cl">&lt;span class="s"> - uses: actions/checkout@v2
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">16&lt;/span>&lt;span class="cl">&lt;span class="s"> with:
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">17&lt;/span>&lt;span class="cl">&lt;span class="s"> submodules: true # Fetch Hugo themes (true OR recursive)
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">18&lt;/span>&lt;span class="cl">&lt;span class="s"> fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">19&lt;/span>&lt;span class="cl">&lt;span class="s">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">20&lt;/span>&lt;span class="cl">&lt;span class="s"> - name: Setup Hugo
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">21&lt;/span>&lt;span class="cl">&lt;span class="s"> uses: peaceiris/actions-hugo@v2
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">22&lt;/span>&lt;span class="cl">&lt;span class="s"> with:
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">23&lt;/span>&lt;span class="cl">&lt;span class="s"> hugo-version: &amp;#39;latest&amp;#39;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">24&lt;/span>&lt;span class="cl">&lt;span class="s">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">25&lt;/span>&lt;span class="cl">&lt;span class="s"> - name: Build
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">26&lt;/span>&lt;span class="cl">&lt;span class="s"> run: hugo --minify
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">27&lt;/span>&lt;span class="cl">&lt;span class="s">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">28&lt;/span>&lt;span class="cl">&lt;span class="s"> - name: Deploy
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">29&lt;/span>&lt;span class="cl">&lt;span class="s"> uses: peaceiris/actions-gh-pages@v3
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">30&lt;/span>&lt;span class="cl">&lt;span class="s"> if: github.ref == &amp;#39;refs/heads/main&amp;#39;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">31&lt;/span>&lt;span class="cl">&lt;span class="s"> with:
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">32&lt;/span>&lt;span class="cl">&lt;span class="s"> personal_token: ${{ secrets.TOKEN }}
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">33&lt;/span>&lt;span class="cl">&lt;span class="s"> external_repository: brightzheng100/brightzheng100.github.io
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">34&lt;/span>&lt;span class="cl">&lt;span class="s"> publish_branch: master
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">35&lt;/span>&lt;span class="cl">&lt;span class="s"> publish_dir: ./public
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">36&lt;/span>&lt;span class="cl">&lt;span class="s">EOF&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="5">
 &lt;li>Commit and push our code to the private project:&lt;/li>
 &lt;/ol>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="ln">1&lt;/span>git add .
-&lt;span class="ln">2&lt;/span>git commit -am &lt;span class="s2">&amp;#34;initial commit&amp;#34;&lt;/span>
-&lt;span class="ln">3&lt;/span>git branch -M main
-&lt;span class="ln">4&lt;/span>git remote add origin git@github.com:brightzheng100/brightzheng100.github.io.private.git
-&lt;span class="ln">5&lt;/span>git push -u origin main
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>That's it!&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="ln">1&lt;/span>&lt;span class="cl">git add .
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">2&lt;/span>&lt;span class="cl">git commit -am &lt;span class="s2">&amp;#34;initial commit&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">3&lt;/span>&lt;span class="cl">git branch -M main
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">4&lt;/span>&lt;span class="cl">git remote add origin git@github.com:brightzheng100/brightzheng100.github.io.private.git
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">5&lt;/span>&lt;span class="cl">git push -u origin main
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>That's it!&lt;/p>
 &lt;h2 id="references">References&lt;/h2>
 &lt;ul>
 &lt;li>
