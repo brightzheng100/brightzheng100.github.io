@@ -1320,6 +1320,13 @@ In this case, it's recommended to update the default &lt;code>Makefile&lt;/code>
 &lt;blockquote>
 &lt;p>Note: I did all these on my MacBook Pro. So your mileage may vary.&lt;/p>
 &lt;/blockquote>
+&lt;blockquote>
+&lt;p>Updates (after initial post):&lt;/p>
+&lt;ol>
+&lt;li>Aug 2013: Updated to fix Hugo issue by adding &lt;code>extended: true&lt;/code> in &amp;quot;Setup Hugo&amp;quot; step: `Error: error building site: TOCSS: failed to transform &amp;quot;sass/main.sass&amp;quot; (text/x-sass). Check your Hugo installation; you need the extended version to build SCSS/SASS with transpiler set to 'libsass'.&lt;/li>
+&lt;li>Aug 2013: Updated to detail out the Github token process.&lt;/li>
+&lt;/ol>
+&lt;/blockquote>
 &lt;h2 id="step-1-install-hugo">Step 1: Install Hugo&lt;/h2>
 &lt;p>Prerequisites:&lt;/p>
 &lt;ul>
@@ -1426,17 +1433,21 @@ This is the one I picked: &lt;a href="https://themes.gohugo.io/hugo-clarity/">ht
 Created a new folder named &lt;code>icons&lt;/code> under &lt;code>/static&lt;/code> and put the favicon as &lt;code>favicon-32x32.png&lt;/code> under this folder.&lt;/p>
 &lt;h2 id="step-9-host-it-on-github">Step 9: Host It on GitHub&lt;/h2>
 &lt;ol>
-&lt;li>
-&lt;p>Generate a new personal token in: &lt;a href="https://github.com/settings/tokens">https://github.com/settings/tokens&lt;/a>. And then make a copy of the token generated;&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Create two repositories:&lt;/p>
-&lt;/li>
+&lt;li>Create two repositories:&lt;/li>
 &lt;/ol>
 &lt;ul>
-&lt;li>&lt;code>&amp;lt;USERNAME&amp;gt;/&amp;lt;USERNAME&amp;gt;.github.io.private&lt;/code> to host Hugo project, as a &lt;strong>private project&lt;/strong>, like &lt;code>brightzheng100/brightzheng100.github.io.private&lt;/code> -- well, the naming here is not important;&lt;/li>
-&lt;li>&lt;code>&amp;lt;USERNAME&amp;gt;/&amp;lt;USERNAME&amp;gt;.github.io.private&lt;/code> to host published website project, as a &lt;strong>public project&lt;/strong>, like &lt;code>brightzheng100/brightzheng100.github.io&lt;/code> -- the naming is important as per GitHub's convention;&lt;/li>
+&lt;li>&lt;code>&amp;lt;USERNAME&amp;gt;/&amp;lt;USERNAME&amp;gt;.github.io.private&lt;/code> to host Hugo project we built above, as a &lt;strong>private project&lt;/strong>, like &lt;code>brightzheng100/brightzheng100.github.io.private&lt;/code> -- well, the naming here is not important;&lt;/li>
+&lt;li>&lt;code>&amp;lt;USERNAME&amp;gt;/&amp;lt;USERNAME&amp;gt;.github.io.private&lt;/code> to host the published website, as a &lt;strong>public project&lt;/strong>, like &lt;code>brightzheng100/brightzheng100.github.io&lt;/code> -- the naming is important as per GitHub's convention.&lt;/li>
 &lt;/ul>
+&lt;ol start="2">
+&lt;li>Generate a new personal access token in: &lt;a href="https://github.com/settings/tokens">https://github.com/settings/tokens&lt;/a>.&lt;/li>
+&lt;/ol>
+&lt;p>When using &amp;quot;Fine-grained personal access tokens&amp;quot;, which is recommended, make sure to:&lt;/p>
+&lt;ul>
+&lt;li>Select &amp;quot;Only select repositories&amp;quot;, with the public repo, in my case it's &amp;quot;brightzheng100/brightzheng100.github.io&amp;quot;&lt;/li>
+&lt;li>In Permissions section, select &amp;quot;Repository permissions&amp;quot;, with &amp;quot;Contents&amp;quot; as &amp;quot;Read and write&amp;quot; and &amp;quot;Metadata&amp;quot; as &amp;quot;Read-only&amp;quot;&lt;/li>
+&lt;/ul>
+&lt;p>And then make a copy of the token generated.&lt;/p>
 &lt;ol start="3">
 &lt;li>
 &lt;p>Create a &lt;code>Secret&lt;/code> named &lt;code>TOKEN&lt;/code> under &lt;code>&amp;lt;USERNAME&amp;gt;/&amp;lt;USERNAME&amp;gt;.github.io.private&lt;/code>.&lt;/p>
@@ -1455,32 +1466,36 @@ Created a new folder named &lt;code>icons&lt;/code> under &lt;code>/static&lt;/c
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 8&lt;/span>&lt;span class="cl">&lt;span class="s"> branches:
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln"> 9&lt;/span>&lt;span class="cl">&lt;span class="s"> - main # Note: I&amp;#39;m using main branch in my private repo
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">10&lt;/span>&lt;span class="cl">&lt;span class="s">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">11&lt;/span>&lt;span class="cl">&lt;span class="s">jobs:
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">12&lt;/span>&lt;span class="cl">&lt;span class="s"> deploy:
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">13&lt;/span>&lt;span class="cl">&lt;span class="s"> runs-on: ubuntu-20.04
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">14&lt;/span>&lt;span class="cl">&lt;span class="s"> steps:
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">15&lt;/span>&lt;span class="cl">&lt;span class="s"> - uses: actions/checkout@v2
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">16&lt;/span>&lt;span class="cl">&lt;span class="s"> with:
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">17&lt;/span>&lt;span class="cl">&lt;span class="s"> submodules: true # Fetch Hugo themes (true OR recursive)
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">18&lt;/span>&lt;span class="cl">&lt;span class="s"> fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">19&lt;/span>&lt;span class="cl">&lt;span class="s">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">20&lt;/span>&lt;span class="cl">&lt;span class="s"> - name: Setup Hugo
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">21&lt;/span>&lt;span class="cl">&lt;span class="s"> uses: peaceiris/actions-hugo@v2
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">22&lt;/span>&lt;span class="cl">&lt;span class="s"> with:
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">23&lt;/span>&lt;span class="cl">&lt;span class="s"> hugo-version: &amp;#39;latest&amp;#39;
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">24&lt;/span>&lt;span class="cl">&lt;span class="s">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">25&lt;/span>&lt;span class="cl">&lt;span class="s"> - name: Build
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">26&lt;/span>&lt;span class="cl">&lt;span class="s"> run: hugo --minify
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">27&lt;/span>&lt;span class="cl">&lt;span class="s">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">28&lt;/span>&lt;span class="cl">&lt;span class="s"> - name: Deploy
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">29&lt;/span>&lt;span class="cl">&lt;span class="s"> uses: peaceiris/actions-gh-pages@v3
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">30&lt;/span>&lt;span class="cl">&lt;span class="s"> if: github.ref == &amp;#39;refs/heads/main&amp;#39;
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">31&lt;/span>&lt;span class="cl">&lt;span class="s"> with:
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">32&lt;/span>&lt;span class="cl">&lt;span class="s"> personal_token: ${{ secrets.TOKEN }}
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">33&lt;/span>&lt;span class="cl">&lt;span class="s"> external_repository: brightzheng100/brightzheng100.github.io
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">34&lt;/span>&lt;span class="cl">&lt;span class="s"> publish_branch: master
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">35&lt;/span>&lt;span class="cl">&lt;span class="s"> publish_dir: ./public
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">36&lt;/span>&lt;span class="cl">&lt;span class="s">EOF&lt;/span>
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">11&lt;/span>&lt;span class="cl">&lt;span class="s"> # Allows you to run this workflow manually from the Actions tab
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">12&lt;/span>&lt;span class="cl">&lt;span class="s"> workflow_dispatch:
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">13&lt;/span>&lt;span class="cl">&lt;span class="s">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">14&lt;/span>&lt;span class="cl">&lt;span class="s">jobs:
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">15&lt;/span>&lt;span class="cl">&lt;span class="s"> deploy:
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">16&lt;/span>&lt;span class="cl">&lt;span class="s"> runs-on: ubuntu-20.04
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">17&lt;/span>&lt;span class="cl">&lt;span class="s"> steps:
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">18&lt;/span>&lt;span class="cl">&lt;span class="s"> - uses: actions/checkout@v2
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">19&lt;/span>&lt;span class="cl">&lt;span class="s"> with:
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">20&lt;/span>&lt;span class="cl">&lt;span class="s"> submodules: true # Fetch Hugo themes (true OR recursive)
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">21&lt;/span>&lt;span class="cl">&lt;span class="s"> fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">22&lt;/span>&lt;span class="cl">&lt;span class="s">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">23&lt;/span>&lt;span class="cl">&lt;span class="s"> - name: Setup Hugo
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">24&lt;/span>&lt;span class="cl">&lt;span class="s"> uses: peaceiris/actions-hugo@v2
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">25&lt;/span>&lt;span class="cl">&lt;span class="s"> with:
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">26&lt;/span>&lt;span class="cl">&lt;span class="s"> hugo-version: &amp;#39;latest&amp;#39;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">27&lt;/span>&lt;span class="cl">&lt;span class="s"> extended: true
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">28&lt;/span>&lt;span class="cl">&lt;span class="s">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">29&lt;/span>&lt;span class="cl">&lt;span class="s"> - name: Build
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">30&lt;/span>&lt;span class="cl">&lt;span class="s"> run: hugo --minify
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">31&lt;/span>&lt;span class="cl">&lt;span class="s">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">32&lt;/span>&lt;span class="cl">&lt;span class="s"> - name: Deploy
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">33&lt;/span>&lt;span class="cl">&lt;span class="s"> uses: peaceiris/actions-gh-pages@v3
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">34&lt;/span>&lt;span class="cl">&lt;span class="s"> if: github.ref == &amp;#39;refs/heads/main&amp;#39;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">35&lt;/span>&lt;span class="cl">&lt;span class="s"> with:
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">36&lt;/span>&lt;span class="cl">&lt;span class="s"> personal_token: ${{ secrets.TOKEN }}
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">37&lt;/span>&lt;span class="cl">&lt;span class="s"> external_repository: brightzheng100/brightzheng100.github.io
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">38&lt;/span>&lt;span class="cl">&lt;span class="s"> publish_branch: master
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">39&lt;/span>&lt;span class="cl">&lt;span class="s"> publish_dir: ./public
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">40&lt;/span>&lt;span class="cl">&lt;span class="s">EOF&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="5">
 &lt;li>Commit and push our code to the private project:&lt;/li>
 &lt;/ol>
@@ -1489,7 +1504,13 @@ Created a new folder named &lt;code>icons&lt;/code> under &lt;code>/static&lt;/c
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">3&lt;/span>&lt;span class="cl">git branch -M main
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">4&lt;/span>&lt;span class="cl">git remote add origin git@github.com:brightzheng100/brightzheng100.github.io.private.git
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="ln">5&lt;/span>&lt;span class="cl">git push -u origin main
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>That's it!&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="daily-blog--diary-updates">Daily Blog / Diary Updates&lt;/h2>
+&lt;p>In day 2 and beyond, if you want to add new blogs / diaries, simply do this:&lt;/p>
+&lt;ol>
+&lt;li>Add a new markdown file in corresponding folder, say blogs in &lt;code>/content/post&lt;/code> or diaries in &lt;code>/content/diary&lt;/code>;&lt;/li>
+&lt;li>Add new images in &lt;code>/static/images/&amp;lt;YYYY&amp;gt;&lt;/code> folder and refer them in your blogs / diaries.&lt;/li>
+&lt;/ol>
+&lt;p>That's it!&lt;/p>
 &lt;h2 id="references">References&lt;/h2>
 &lt;ul>
 &lt;li>
