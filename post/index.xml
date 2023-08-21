@@ -2,10 +2,11 @@
 &lt;h2 id="overview">Overview&lt;/h2>
 &lt;p>Kubernetes' official website has a good &lt;a href="https://kubernetes.io/docs/concepts/security/multi-tenancy/">explaination&lt;/a> about the motivation, use cases, considerations, and the potential patterns of implementing the multi-tenancy in Kubernetes.&lt;/p>
 &lt;p>Running Kubernetes is costly in terms of the required resources and the overhead of managing the clusters.
-And Kubernetes does not support multi-tenancy natively even it has some building blocks to support isolation for different teams and users, but a real multi-tenancy solution is still needed.&lt;/p>
+And Kubernetes does not support multi-tenancy natively even it has some building blocks to support isolation for different teams and users.&lt;/p>
+&lt;p>A real multi-tenancy solution is still desirable.&lt;/p>
 &lt;p>Multi-tenancy in this context is about how to share a physical Kubernetes cluster to different tenants, with some sort of isolation and control. Some may even look at a broader landscape to build multi-tenancy solution across multiple clusters.&lt;/p>
-&lt;p>There are many innovative solutions / open-source projects in the vibrant Kubernetes community.
-In this blog series, I'm going to discuss the potential evaluation criteria and dive into two very interesting projects, among others, to walk through the evaluation process:&lt;/p>
+&lt;p>There are many innovative solutions / open-source projects in the vibrant Kubernetes community.&lt;/p>
+&lt;p>In this blog series, I'm going to discuss the potential evaluation criteria and dive into two very interesting projects, among others, to walk through the evaluation process:&lt;/p>
 &lt;ul>
 &lt;li>&lt;a href="https://www.vcluster.com/docs/what-are-virtual-clusters">vcluster&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://capsule.clastix.io/docs/">Capsule&lt;/a>&lt;/li>
@@ -13,8 +14,8 @@ In this blog series, I'm going to discuss the potential evaluation criteria and 
 &lt;p>This blog series includes 4 parts:&lt;/p>
 &lt;ul>
 &lt;li>The evaluation criteria (this blog)&lt;/li>
-&lt;li>The evaluation process for &lt;code>vcluster&lt;/code> (will add the link once it's ready)&lt;/li>
-&lt;li>The evaluation process for &lt;code>Capsule&lt;/code> (will add the link once it's ready)&lt;/li>
+&lt;li>The evaluation process for &lt;strong>vcluster&lt;/strong> (will add the link once it's ready)&lt;/li>
+&lt;li>The evaluation process for &lt;strong>Capsule&lt;/strong> (will add the link once it's ready)&lt;/li>
 &lt;li>The comparison and conclusion (will add the link once it's ready)&lt;/li>
 &lt;/ul>
 &lt;h2 id="evaluation-criteria">Evaluation Criteria&lt;/h2>
